@@ -17,7 +17,6 @@
       <template #footer>
         <span class="dialog-footer">
           <slot name="button"/>
-          <!-- <el-button>Regist</el-button> -->
         </span>
       </template>
     </el-dialog>
@@ -42,9 +41,6 @@ export default defineComponent({
     return { ...toRefs(state) };
   },
   methods: {
-    cat() {
-      console.log("cat");
-    },
     openDialog() {
       this.open = true;
     },
