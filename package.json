@@ -2,15 +2,20 @@
   "name": "books",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://localhost:8080/",
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "REACT_APP_API_URL=https://bookshelf.jk/api vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "dotenv": "^10.0.0",
     "element-plus": "^1.0.2-beta.46",
+    "match-sorter": "^6.3.0",
+    "node-match-path": "^0.6.3",
     "vue": "^3.0.0",
+    "vue-query": "^1.5.1",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
   },
@@ -30,9 +35,13 @@
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-vue": "^7.0.0",
+    "msw": "^0.29.0",
     "node-sass": "^4.12.0",
     "prettier": "^2.2.1",
     "sass-loader": "^8.0.2",
     "typescript": "~4.1.5"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }
