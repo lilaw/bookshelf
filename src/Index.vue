@@ -8,7 +8,7 @@
 import { defineComponent } from "vue";
 import { useQueryProvider } from "vue-query";
 import App from "./App.vue";
-import authProvider from "@/context/AuthContext.vue";
+import authProvider from "@/context/AuthPrivider.vue";
 
 export default defineComponent({
   components: {

@@ -1,6 +1,5 @@
 const apiURL = "https://bookshelf.jk/api";
 
-
 type config = {
   data?: string;
   token?: string;
@@ -18,7 +17,6 @@ function client(
     },
     ...customConfig,
   };
-  console.log({ data });
 
   return window
     .fetch(`${apiURL}/${endpoint}`, config as RequestInit)

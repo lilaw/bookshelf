@@ -31,7 +31,7 @@
 <script lang="ts">
 import { defineComponent, PropType, reactive, toRefs } from "vue";
 import { useQuery } from "vue-query";
-import { form, responseError, user } from "@/context/AuthContext.vue";
+import { form, responseError, user } from "@/context/authProvider";
 type state = {
   username: string;
   password: string;

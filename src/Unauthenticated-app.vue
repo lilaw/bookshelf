@@ -27,7 +27,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import Form from "@/components/Form.vue";
-import { useAuth } from "@/context/AuthContext.vue";
+import { useAuth } from "@/context/authProvider";
 
 export default defineComponent({
   name: "Home",
