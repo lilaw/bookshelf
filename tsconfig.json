@@ -32,7 +32,7 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-, "src/utils/client.js"  ],
+, "src/utils/client.js", "src/utils/auth-provider.ts"  ],
   "exclude": [
     "node_modules"
   ]

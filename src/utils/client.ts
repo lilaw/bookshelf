@@ -13,11 +13,12 @@ function client(
   const config = {
     method: "GET",
     headers: {
+      Authorization: token ? `Bearer ${token}` : undefined,
       customHeaders,
     },
     ...customConfig,
   };
-  console.log({ data, token });
+  console.log({ data });
 
   return window
     .fetch(`${apiURL}/${endpoint}`, config as RequestInit)

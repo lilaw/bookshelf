@@ -1,44 +1,34 @@
 <template>
   <div class="layout">
-    <el-row>
-      <el-col :span="4">
-        <div id="nav">
-          <router-link to="/">Home</router-link> |
-          <router-link to="/about">About</router-link>
-          <router-link to="/discover">Discover</router-link>
-        </div>
-      </el-col>
-      <el-col :span="20"> <router-view /> </el-col>
-    </el-row>
+    <authenticated-app v-if="user" />
+    <unauthenticated-app v-else />
   </div>
 </template>
 
 <script>
-import { defineComponent } from 'vue'
-import { useQueryProvider } from "vue-query";
+import { defineComponent } from "vue";
+import { useAuth } from "@/context/AuthContext.vue";
+import AuthenticatedApp from "./Authenticated-app.vue";
+import UnauthenticatedApp from "./Unauthenticated-app.vue";
 
 export default defineComponent({
-  setup() {
-    useQueryProvider();    
+  components: {
+    AuthenticatedApp,
+    UnauthenticatedApp,
   },
-})
+  setup() {
+    const { user } = useAuth();
+
+    return { user };
+  },
+});
 </script>
 
-
 <style lang="scss">
-* {
-  box-sizing: border-box;
-}
-#app {
+  .layout {
+
+  color: white;
   background-color: black;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #ffff;
-}
+  }
 
-#nav {
-}
 </style>
-

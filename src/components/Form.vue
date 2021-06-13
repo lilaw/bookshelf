@@ -16,7 +16,7 @@
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <slot name="button"/>
+          <slot name="button" :form="{ username, password }" />
         </span>
       </template>
     </el-dialog>
@@ -25,17 +25,16 @@
 
 <script lang="ts">
 import { defineComponent, PropType, reactive, toRefs } from "vue";
-
 type form = {
   username: string;
   password: string;
   open: boolean;
 };
+
 export default defineComponent({
   props: {
     modal: { type: String as PropType<"register" | "login"> },
   },
-  emits: ["welcome"],
   setup() {
     const state = reactive<form>({ username: "", password: "", open: false });
     return { ...toRefs(state) };
