@@ -1,15 +1,33 @@
 <template>
   <div v-if="isLoading">is loading</div>
-  <div v-if="isError">is error {{ error.message }}</div>
-  <div v-if="isSuccess">
+  <div v-else-if="isError">is error {{ error.message }}</div>
+  <div v-else-if="isSuccess">
     is success
     <slot> </slot>
+  </div>
+  <div v-else>
+    There is a Unhandled state in AuthContext.vue. state is {{ state }}
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+type form = {
+  [K in "username" | "password"]: string;
+};
+type user = {
+  [k in "id" | "token" | "username"]: string;
+};
 
+type responseError = { message: string; code: number };
+type value = {
+  user: Ref<user>;
+  login: (form: form) => Promise<user>;
+  register: (form: form) => Promise<user>;
+  logout: () => void;
+};
+const valueKey: InjectionKey<value> = Symbol();
+
+import { defineComponent } from "vue";
 import {
   getToken,
   login as authLogin,
@@ -18,23 +36,7 @@ import {
 } from "@/utils/auth-provider";
 import { client } from "@/utils/client";
 import { useQuery } from "vue-query";
-import { InjectionKey, provide, inject, Ref } from "vue";
-
-type form = {
-  [K in "username" | "password"]: string;
-};
-type user = {
-  [k in "id" | "token" | "username"]: string;
-};
-
-// eslint-disable-next-line
-type value = {
-  user: Ref<user>;
-  login: (form: form) => Promise<user>;
-  register: (form: form) => Promise<user>;
-  logout: () => void;
-};
-const valueKey: InjectionKey<value> = Symbol();
+import { provide, InjectionKey, Ref, inject } from "vue";
 
 export default defineComponent({
   setup() {
@@ -49,6 +51,7 @@ export default defineComponent({
     }
 
     var {
+      status,
       isLoading,
       isError,
       isSuccess,
@@ -69,7 +72,7 @@ export default defineComponent({
     const value = { user: user as Ref<user>, login, register, logout };
     provide(valueKey, value);
 
-    return { isLoading, isError, isSuccess, error };
+    return { status, isLoading, isError, isSuccess, error };
   },
 });
 
@@ -81,6 +84,7 @@ export function useAuth(): value {
     throw new Error("use Auth value is undefined. ");
   }
 }
+export { form, user, responseError, valueKey, value };
 </script>
 
 <style scoped></style>

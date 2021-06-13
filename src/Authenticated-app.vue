@@ -1,5 +1,6 @@
 <template>
   <div class="layout">
+    <Header />
     <el-row>
       <el-col :span="4">
         <div id="nav">
@@ -15,9 +16,14 @@
 
 <script>
 import { defineComponent } from "vue";
+import Header from '@/components/Header.vue';
+
 
 export default defineComponent({
   setup() {return {}},
+  components: {
+    Header
+  },
 });
 </script>
 
