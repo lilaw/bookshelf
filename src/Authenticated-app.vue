@@ -33,6 +33,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scope>
+.layout {
+  min-height: 98vh;
+}
 .nav {
   position: sticky;
   display: grid;
