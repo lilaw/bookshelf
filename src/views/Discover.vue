@@ -22,7 +22,6 @@
       </li>
     </ul>
   </main>
-  <pre>{{ JSON.stringify(data, null, 2) }}</pre>
 </template>
 
 <script lang="ts">
@@ -46,7 +45,9 @@ export default defineComponent({
     } = useQuery("books", () =>
       client(`books?query=${encodeURIComponent(state.query)}`).then(
         (data) => data.books
-      )
+      ), {
+        refetchOnWindowFocus: false
+      }
     );
     return {
       ...toRefs(state),

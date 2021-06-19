@@ -34,6 +34,7 @@ function useListItems(): Ref<item[]> | Ref<undefined> {
     () => client("list-items").then((data) => data.listItems),
     {
       initialData: [],
+      refetchOnWindowFocus: false,
     }
   );
   return listItems;
@@ -48,28 +49,32 @@ function useListItem(bookId: string): ComputedRef<item | null> {
   return item;
 }
 
-function useCreateListItem(config: config) {
+function useCreateListItem(config?: config) {
   const client = useClient();
 
-  return useMutation(({ bookId }: { bookId: string }) =>
-    client("list-items", { data: { bookId }, ...config })
-  );
+  return useMutation(({ bookId }: { bookId: string }) => {
+    return client("list-items", { data: { bookId }, method: "POST", ...config });
+  });
 }
 
-function useRemoveListItem(config: config) {
+function useRemoveListItem(config?: config) {
   const client = useClient();
 
   return useMutation(({ id }: { id: string }) =>
-    client(`list-items/${id}`, config)
+    client(`list-items/${id}`, {method: "DELETE", ...config})
   );
 }
 
-function useUdateListItem(config: config) {
+function useUdateListItem(config?: config) {
   const client = useClient();
 
-  return useMutation((payload: { id: string; finishDate: number }) =>
-    client(`list-item/${payload.id}`, { data: payload, ...config })
-  );
+  return useMutation((payload: { id: string; finishDate: number | null }) => {
+    return client(`list-items/${payload.id}`, {
+      data: payload,
+      method: "PUT",
+      ...config,
+    });
+  });
 }
 
 export {

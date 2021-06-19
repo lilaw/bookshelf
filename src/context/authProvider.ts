@@ -5,8 +5,8 @@ import {
   logout as authLogout,
   register as authRegister,
 } from "@/utils/auth-provider";
-import { provide, Ref, ref, InjectionKey, inject } from "vue";
-import { client } from "@/utils/client";
+import { provide, Ref, ref, InjectionKey, inject, watch } from "vue";
+import { client, config } from "@/utils/client";
 
 /**
  * type for provider ********************************************
@@ -44,9 +44,20 @@ export function authProvider() {
     });
   }
   const user: Ref<user | undefined> = ref(undefined);
-  const result = useQuery("user", getUser);
-  const { status, isLoading, isError, isSuccess, error } = result;
-  user.value = result.data.value;
+  const result = useQuery<user | undefined, responseError>("user", getUser, {staleTime: Infinity});
+  const {
+    status,
+    isLoading,
+    isError,
+    isSuccess,
+    error,
+    data: userFromServer,
+  } = result;
+
+  watch(userFromServer, (data) => {
+    console.log("featch user");
+    user.value = data;
+  });
 
   function login(form: form) {
     return authLogin(form).then((newUser) => (user.value = newUser));
@@ -55,7 +66,6 @@ export function authProvider() {
     return authRegister(form).then((newUser) => (user.value = newUser));
   }
   function logout() {
-    debugger;
     authLogout();
     user.value = undefined;
   }
@@ -77,4 +87,12 @@ export function useAuth(): value {
   } else {
     throw new Error("use Auth value is undefined. ");
   }
+}
+
+export function useClient() {
+  const { user } = useAuth();
+  const token = user.value?.token;
+  return function withUserClient(endpoint: string, config?: config) {
+    return client(endpoint, { token, ...config });
+  };
 }

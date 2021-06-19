@@ -1,20 +1,23 @@
 const apiURL = "https://bookshelf.jk/api";
 
 type config = {
-  data?: string;
+  data?: { [k in string]: string | number | null};
   token?: string;
   headers?: string;
+  method?: "GET" | "DELETE" | "PUT" | "POST";
 };
 function client(
   endpoint: string,
-  { data, token, headers: customHeaders, ...customConfig }: config = {}
+  { data, token, headers: customHeaders, method, ...customConfig }: config = {}
 ) {
   const config = {
-    method: "GET",
+    method: method ? method : "GET",
     headers: {
       Authorization: token ? `Bearer ${token}` : undefined,
+      "Content-Type": data ? "application/json" : undefined,
       customHeaders,
     },
+    body: data ? JSON.stringify(data) : undefined,
     ...customConfig,
   };
 
@@ -23,4 +26,4 @@ function client(
     .then((res) => res.json());
 }
 
-export { client };
+export { client, config };

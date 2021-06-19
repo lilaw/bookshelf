@@ -1,12 +1,20 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/Home.vue";
+import Discover from "../views/Discover.vue";
 
 const routes: Array<RouteRecordRaw> = [
+  { path: "/", redirect: "/discover" },
   {
-    path: "/",
-    name: "Home",
-    component: Home,
+    path: "/list",
+    name: "readingList",
+    component: () =>
+      import(/* webpackChunkName: "readingList" */ "../views/ReadingList.vue"),
   },
+  // {
+  //   path: "/",
+  //   name: "Home",
+  //   component: Home,jk
+  // },
   {
     path: "/about",
     name: "About",
@@ -21,7 +29,13 @@ const routes: Array<RouteRecordRaw> = [
     name: "Discover",
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/Discover.vue"),
-  }
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "404",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+  },
 ];
 
 const router = createRouter({

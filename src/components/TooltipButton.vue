@@ -1,39 +1,39 @@
 <template>
-  <div class="tooltip">
-    <button class="button">
-      <i class="el-icon-circle-plus"></i>
-    </button>
-
-
-  </div>
+  <el-tooltip :content="isError ? error.message : label" placement="bottom" effect="light">
+    <div>
+      <el-button
+        class="button"
+        native-type="button"
+        :aria-label="isError ? error.message : label"
+        size="mini"
+        circle
+        @click.prevent.stop="clickHandler"
+      >
+        <i class="el-icon-loading" v-if="isLoading" />
+        <i :class="icon" v-else />
+      </el-button>
+    </div>
+  </el-tooltip>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from "vue";
 
 export default defineComponent({
-  setup () {
-
-
-    return {}
-  }
-})
+  props: {
+    label: String,
+    clickHandler: { type: Function, required: true },
+    icon: { type: String, required: true },
+    state: { type: Object, required: true },
+  },
+  setup(props) {
+    return {
+      isLoading: props.state.isLoading,
+      isError: props.state.isError,
+      error: props.state.error,
+    };
+  },
+});
 </script>
 
-<style lang="scss" scoped>
-.tooltip {
-  display: flex;
-  align-items: center;
-}
-
-.button {
-  border: white solid .1em;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  margin-left: -15px;
-  cursor: pointer;
-
-}
-
-</style>
+<style lang="scss" scoped></style>

@@ -14,26 +14,15 @@
         </div>
       </div>
     </a>
-    <tooltip-button />
+    <TooltipStatus :bookId="book.id" />
   </section>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import TooltipButton from '@/components/TooltipButton.vue';
+import TooltipStatus from "@/components/TooltipStatus.vue";
+import { book } from "@/utils/listItems";
 
-
-type book = {
-  [K in
-    | "title"
-    | "author"
-    | "coverImageUrl"
-    | "id"
-    | "publisher"
-    | "synopsis"]: number;
-} & {
-  pageCount: number;
-};
 
 export default defineComponent({
   props: {
@@ -43,7 +32,7 @@ export default defineComponent({
     return {};
   },
   components: {
-    TooltipButton
+    TooltipStatus,
   },
 });
 </script>
@@ -58,6 +47,7 @@ export default defineComponent({
     align-items: flex-start;
     column-gap: 1rem;
     padding: 1rem;
+    padding-right: 2rem;
     border: white solid 0.1em;
   }
   &__cover {
@@ -76,6 +66,9 @@ export default defineComponent({
     grid-row: 2 / 3;
     grid-column: 1 / 3;
     text-align: left;
+  }
+  &__link {
+    color: white;
   }
 }
 </style>

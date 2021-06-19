@@ -3,11 +3,15 @@
     <Header />
     <el-row>
       <el-col :span="4">
-        <div id="nav">
-          <router-link to="/">Home</router-link> |
-          <router-link to="/about">About</router-link>
-          <router-link to="/discover">Discover</router-link>
-        </div>
+        <nav class="nav">
+          <router-link class="nav__link" to="/list"
+            ><span>List</span></router-link
+          >
+          <router-link class="nav__link" to="/about"><span>About</span></router-link>
+          <router-link class="nav__link" to="/discover"
+            ><span>Discover</span></router-link
+          >
+        </nav>
       </el-col>
       <el-col :span="20"> <router-view /> </el-col>
     </el-row>
@@ -16,17 +20,40 @@
 
 <script>
 import { defineComponent } from "vue";
-import Header from '@/components/Header.vue';
-
+import Header from "@/components/Header.vue";
 
 export default defineComponent({
-  setup() {return {}},
+  setup() {
+    return {};
+  },
   components: {
-    Header
+    Header,
   },
 });
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" scope>
+.nav {
+  position: sticky;
+  display: grid;
+  border: white solid 0.1em;
+  margin: 1rem;
+  margin-right: 2rem;
+  row-gap: 0.5rem;
+  padding: 0.5rem;
 
->
+  &__item {
+  }
+  &__link {
+    padding: 0.4rem;
+    color: inherit;
+    width: 100%;
+    display: block;
+    border-radius: 5px;
+  }
+}
+.router-link-active {
+  background-color: #282828;
+
+}
+</style>

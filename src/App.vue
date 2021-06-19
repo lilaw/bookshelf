@@ -25,6 +25,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+* {
+  box-sizing: border-box;
+}
   .layout {
 
   color: white;
