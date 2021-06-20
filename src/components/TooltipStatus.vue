@@ -31,7 +31,9 @@
         icon="el-icon-check"
         label="MarK as read"
         :state="update"
-        :clickHandler="() => update.mutate({ id: item.id, finishDate: Date.now() })"
+        :clickHandler="
+          () => update.mutate({ id: item.id, finishDate: Date.now() })
+        "
         v-else
       >
       </tooltip-button>
@@ -40,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from "vue";
+import { defineComponent } from "vue";
 import TooltipButton from "@/components/TooltipButton.vue";
 import {
   useListItem,

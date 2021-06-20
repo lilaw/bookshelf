@@ -1,7 +1,5 @@
 <template>
-  <div class="home">
-  home
-  </div>
+  <div class="home">home</div>
 </template>
 
 <script lang="ts">
@@ -25,9 +23,7 @@ export default defineComponent({
       ...toRefs(state),
     };
   },
-  methods: {
-  },
-  components: {
-  },
+  methods: {},
+  components: {},
 });
 </script>

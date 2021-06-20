@@ -23,12 +23,11 @@ import { defineComponent, PropType } from "vue";
 import TooltipStatus from "@/components/TooltipStatus.vue";
 import { book } from "@/utils/listItems";
 
-
 export default defineComponent({
   props: {
     book: Object as PropType<book>,
   },
-  setup(props) {
+  setup() {
     return {};
   },
   components: {

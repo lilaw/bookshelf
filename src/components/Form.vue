@@ -14,7 +14,11 @@
           ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button @click="refetch" :disabled="isFetching" native-type=“submit”>
+          <el-button
+            @click="refetch"
+            :disabled="isFetching"
+            native-type="“submit”"
+          >
             <slot name="button-text" :isFetching="isFetching" />
           </el-button>
           &nbsp;
@@ -31,7 +35,7 @@
 <script lang="ts">
 import { defineComponent, PropType, reactive, toRefs } from "vue";
 import { useQuery } from "vue-query";
-import { form, responseError, user } from "@/context/authProvider";
+import { form, user } from "@/context/authProvider";
 type state = {
   username: string;
   password: string;

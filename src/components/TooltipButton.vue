@@ -1,5 +1,9 @@
 <template>
-  <el-tooltip :content="isError ? error.message : label" placement="bottom" effect="light">
+  <el-tooltip
+    :content="isError ? error.message : label"
+    placement="bottom"
+    effect="light"
+  >
     <div>
       <el-button
         class="button"

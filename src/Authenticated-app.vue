@@ -7,7 +7,9 @@
           <router-link class="nav__link" to="/list"
             ><span>List</span></router-link
           >
-          <router-link class="nav__link" to="/about"><span>About</span></router-link>
+          <router-link class="nav__link" to="/finished"
+            ><span>Finished</span></router-link
+          >
           <router-link class="nav__link" to="/discover"
             ><span>Discover</span></router-link
           >
@@ -57,6 +59,5 @@ export default defineComponent({
 }
 .router-link-active {
   background-color: #282828;
-
 }
 </style>

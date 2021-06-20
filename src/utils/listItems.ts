@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "vue-query";
 import { useClient } from "@/context/authProvider";
 import { config } from "@/utils/client";
-import { computed, ComputedRef, Ref, ref, watch } from "vue";
+import { computed, ComputedRef, Ref } from "vue";
 
 type book = {
   [K in
@@ -53,7 +53,11 @@ function useCreateListItem(config?: config) {
   const client = useClient();
 
   return useMutation(({ bookId }: { bookId: string }) => {
-    return client("list-items", { data: { bookId }, method: "POST", ...config });
+    return client("list-items", {
+      data: { bookId },
+      method: "POST",
+      ...config,
+    });
   });
 }
 
@@ -61,7 +65,7 @@ function useRemoveListItem(config?: config) {
   const client = useClient();
 
   return useMutation(({ id }: { id: string }) =>
-    client(`list-items/${id}`, {method: "DELETE", ...config})
+    client(`list-items/${id}`, { method: "DELETE", ...config })
   );
 }
 
@@ -84,4 +88,5 @@ export {
   useRemoveListItem,
   useUdateListItem,
   book,
+  item,
 };

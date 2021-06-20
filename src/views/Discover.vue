@@ -42,11 +42,14 @@ export default defineComponent({
       data: books,
       error,
       refetch,
-    } = useQuery("books", () =>
-      client(`books?query=${encodeURIComponent(state.query)}`).then(
-        (data) => data.books
-      ), {
-        refetchOnWindowFocus: false
+    } = useQuery(
+      "books",
+      () =>
+        client(`books?query=${encodeURIComponent(state.query)}`).then(
+          (data) => data.books
+        ),
+      {
+        refetchOnWindowFocus: false,
       }
     );
     return {

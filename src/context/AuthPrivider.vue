@@ -16,7 +16,7 @@ import { authProvider } from "./authProvider";
 export default defineComponent({
   setup() {
     const { status, isLoading, isError, isSuccess, error } = authProvider();
-    
+
     return { status, isLoading, isError, isSuccess, error };
   },
 });

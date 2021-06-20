@@ -28,10 +28,11 @@ export default defineComponent({
 * {
   box-sizing: border-box;
 }
-  .layout {
-
+.layout {
   color: white;
   background-color: black;
-  }
-
+}
+a {
+  color: white;
+}
 </style>

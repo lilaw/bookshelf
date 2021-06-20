@@ -44,7 +44,9 @@ export function authProvider() {
     });
   }
   const user: Ref<user | undefined> = ref(undefined);
-  const result = useQuery<user | undefined, responseError>("user", getUser, {staleTime: Infinity});
+  const result = useQuery<user | undefined, responseError>("user", getUser, {
+    staleTime: Infinity,
+  });
   const {
     status,
     isLoading,

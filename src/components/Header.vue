@@ -1,23 +1,24 @@
 <template>
   <header class="header">
     <span class="hero">Bookshelf</span>
-    <span class="header__username">{{user.username}}</span>
-     <el-button type="primary" class="header__logout" @click.prevent="logout">Logout</el-button>
-
+    <span class="header__username">{{ user.username }}</span>
+    <el-button type="primary" class="header__logout" @click.prevent="logout"
+      >Logout</el-button
+    >
   </header>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from "vue";
 import { useAuth } from "@/context/authProvider";
 
 export default defineComponent({
-  setup () {
-    const {user, logout} = useAuth()
+  setup() {
+    const { user, logout } = useAuth();
 
-    return {user, logout}
-  }
-})
+    return { user, logout };
+  },
+});
 </script>
 
 <style lang="scss" scoped>
@@ -32,12 +33,8 @@ export default defineComponent({
   column-gap: 1rem;
   padding: 1rem;
   &__username {
-    
-
   }
   &__logout {
-    
   }
 }
-
 </style>
