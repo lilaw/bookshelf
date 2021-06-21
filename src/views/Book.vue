@@ -16,23 +16,21 @@
         <div class="book__button">
           <tooltip-status :bookId="bookId" />
         </div>
-        <div class="book__rate">
-          <rate />
+        <div class="book__rate" v-if="listItem">
+          <rate :listItem="listItem" />
         </div>
-        <div class="book__date"></div>
+        <div class="book__date" v-if="listItem">
+          <i class="el-icon-date"></i>
+          <span>{{ formatDate(listItem.startDate) }}</span>
+          <span>— &nbsp;{{ formatDate(listItem.finishDate) }}</span>
+        </div>
         <p class="book__synopsis">{{ book.synopsis.substring(0, 500) }}...</p>
       </div>
     </section>
 
-    <section class="book-container--tail">
+    <section class="book-container--tail" v-if="listItem">
       <label for="book__note" class="book__label">Notes:</label>
-      <textarea
-        name="note"
-        class="book__note"
-        id="book__note"
-        cols="30"
-        rows="10"
-      ></textarea>
+      <form-textarea :listItem="listItem" />
     </section>
   </main>
 </template>
@@ -42,20 +40,30 @@ import { computed, defineComponent } from "vue";
 import { useRoute } from "vue-router";
 import TooltipStatus from "@/components/TooltipStatus.vue";
 import Rate from "@/components/Rate.vue";
-import {useBook} from '@/utils/book'
+import { useBook } from "@/utils/book";
+import { useListItem } from "@/utils/listItems";
+import FormTextarea from "@/components/FormTextarea.vue";
 
 export default defineComponent({
   setup() {
     const route = useRoute();
     const bookId = computed(() => route.params.bookId as string);
-    const book = useBook(bookId.value)
+    const book = useBook(bookId.value);
+    const listItem = useListItem(bookId.value);
 
-    console.log({ route: route.params.bookId });
-    return { book, bookId };
+    function formatDate(isostring: string): string {
+      return Intl.DateTimeFormat(undefined, {
+        month: "short",
+        year: "2-digit",
+      }).format(new Date(isostring));
+    }
+
+    return { book, bookId, listItem, formatDate };
   },
   components: {
     TooltipStatus,
     Rate,
+    FormTextarea,
   },
 });
 </script>
@@ -84,6 +92,7 @@ export default defineComponent({
     display: grid;
     grid-template-columns: 9fr 1fr;
     column-gap: 1rem;
+    row-gap: 0.5rem;
     width: 100%;
   }
   &__title {
@@ -99,20 +108,19 @@ export default defineComponent({
   }
   &__rate {
     grid-column: 1 / -1;
+    height: 2rem;
   }
   &__date {
     grid-column: 1 / -1;
+    display: flex;
+    column-gap: 0.5rem;
+    height: 1.2rem;
   }
   &__synopsis {
     grid-column: 1 / -1;
   }
 
   /* tail */
-  &__note {
-    margin-top: 1rem;
-    display: block;
-    width: 100%;
-  }
   &__label {
   }
 }

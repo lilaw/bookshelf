@@ -1,32 +1,46 @@
 <template>
   <div class="rate">
     <template v-for="i in numberOfStar" :key="i">
-      <input type="radio" :id="`${id}-${i}`" class="rate__radio" name="rate" />
-      <label :for="`${id}-${i}`" class="rate__label">
+      <input
+        type="radio"
+        :id="`${listItem.bookId}-${i}`"
+        class="rate__radio"
+        name="rate"
+        @change.prevent="mutate({ id: listItem.id, rating: i })"
+        :checked="listItem.rating === i"
+      />
+      <label :for="`${listItem.bookId}-${i}`" class="rate__label">
         <i
           :class="{
             'el-icon-star-on': true,
             // eslint-disable-next-line
             'rate__icon': true,
-            'rate__icon--unrate': !rating,
-            'rate__icon--rated': rating,
+            'rate__icon--unrate': !isRating,
+            'rate__icon--rated': isRating,
           }"
         ></i>
       </label>
+      <p v-if="isError">there are a error: {{error.message}}</p>
     </template>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent, PropType } from "vue";
+import { item, useUdateListItem } from "@/utils/listItems";
 
 export default defineComponent({
-  setup() {
-    const id = "1212";
+  props: {
+    listItem: { type: Object as PropType<item>, required: true },
+  },
+  setup(props) {
     const numberOfStar = 5;
-    const rating = false;
+    const isRating = computed(() =>
+      props.listItem.rating == -1 ? false : true
+    );
+    const { mutate, isError, error } = useUdateListItem();
 
-    return { id, numberOfStar, rating };
+    return { numberOfStar, isRating, mutate, isError, error };
   },
 });
 </script>

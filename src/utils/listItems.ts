@@ -72,13 +72,20 @@ function useRemoveListItem(config?: config) {
 function useUdateListItem(config?: config) {
   const client = useClient();
 
-  return useMutation((payload: { id: string; finishDate: number | null }) => {
-    return client(`list-items/${payload.id}`, {
-      data: payload,
-      method: "PUT",
-      ...config,
-    });
-  });
+  return useMutation(
+    (payload: {
+      id: string;
+      finishDate?: number | null;
+      rating?: number;
+      notes?: string;
+    }) => {
+      return client(`list-items/${payload.id}`, {
+        data: payload,
+        method: "PUT",
+        ...config,
+      });
+    }
+  );
 }
 
 export {

@@ -1,7 +1,7 @@
 const apiURL = "https://bookshelf.jk/api";
 
 type config = {
-  data?: { [k in string]: string | number | null };
+  data?: { [k in string]: string | number | null | undefined };
   token?: string;
   headers?: string;
   method?: "GET" | "DELETE" | "PUT" | "POST";
