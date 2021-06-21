@@ -53,12 +53,10 @@ import {
 
 export default defineComponent({
   props: {
-    bookId: String,
-    icon: String,
-    label: String,
+    bookId: { type: String, required: true },
   },
   setup(props) {
-    const item = useListItem(props.bookId || "");
+    const item = useListItem(props.bookId);
 
     const update = useUdateListItem();
     const create = useCreateListItem();
@@ -84,6 +82,8 @@ export default defineComponent({
   justify-content: space-evenly;
   align-items: center;
   margin-left: -15px;
+  height: 100%;
+
 }
 .button {
 }
