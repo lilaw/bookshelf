@@ -5,7 +5,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from "vue";
 import { useAuth } from "@/context/authProvider";
 import AuthenticatedApp from "./Authenticated-app.vue";

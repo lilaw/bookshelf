@@ -15,7 +15,7 @@
           >
         </nav>
       </el-col>
-      <el-col :span="20"> <router-view /> </el-col>
+      <el-col :span="20" class="content"> <router-view /> </el-col>
     </el-row>
   </div>
 </template>
@@ -59,5 +59,8 @@ export default defineComponent({
 }
 .router-link-active {
   background-color: #282828;
+}
+.content {
+  padding-left: 3.5rem;
 }
 </style>

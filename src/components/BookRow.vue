@@ -41,6 +41,7 @@ export default defineComponent({
   margin-top: 1rem;
   width: 45rem;
   display: flex;
+  height: 17.25rem;
   &__wrapper {
     display: flex;
     align-items: flex-start;

@@ -6,7 +6,7 @@
 
 <script>
 import { defineComponent } from "vue";
-import { useQueryProvider } from "vue-query";
+import { useQueryProvider } from "@/context/QueryClient";
 import App from "./App.vue";
 import authProvider from "@/context/AuthPrivider.vue";
 

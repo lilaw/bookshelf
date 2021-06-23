@@ -11,6 +11,10 @@
       <span v-else><i class="el-icon-search"></i> Search</span>
     </el-button>
   </form>
+  <div>
+    <p>Welcome to the discover page.</p>
+    <p>Here, let me load a few books for you...</p>
+  </div>
   <main v-if="books">
     <section v-if="isError">
       <h3>There was an error:</h3>
@@ -25,16 +29,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from "vue";
-import { client } from "@/utils/client";
-import { useQuery } from "vue-query";
+import { defineComponent, onUnmounted, ref } from "vue";
 import BookRow from "@/components/BookRow.vue";
+import { discoverBookSearch, refetchBookSearch } from "@/utils/book";
 
 export default defineComponent({
   setup() {
-    const state = reactive({
-      query: "j",
-    });
+    const query = ref("");
     const {
       isLoading,
       isError,
@@ -42,18 +43,12 @@ export default defineComponent({
       data: books,
       error,
       refetch,
-    } = useQuery(
-      "books",
-      () =>
-        client(`books?query=${encodeURIComponent(state.query)}`).then(
-          (data) => data.books
-        ),
-      {
-        refetchOnWindowFocus: false,
-      }
-    );
+    } = discoverBookSearch(query.value);
+
+    onUnmounted(() => refetchBookSearch());
+
     return {
-      ...toRefs(state),
+      query,
       isLoading,
       isError,
       isFetching,
@@ -72,6 +67,7 @@ export default defineComponent({
 .search {
   display: flex;
   column-gap: 1rem;
+  width: 42rem;
   &__btn {
     width: 125px;
   }
@@ -79,5 +75,6 @@ export default defineComponent({
 
 .books {
   list-style-type: none;
+  padding: 0;
 }
 </style>

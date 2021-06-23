@@ -1,3 +1,5 @@
+import { logout } from "@/utils/auth-provider";
+
 const apiURL = "https://bookshelf.jk/api";
 
 type config = {
@@ -23,7 +25,19 @@ function client(
 
   return window
     .fetch(`${apiURL}/${endpoint}`, config as RequestInit)
+    .then(unauthorized)
     .then((res) => res.json());
+
+  async function unauthorized(res: Response) {
+    if (res.status === 401) {
+      logout().then(() => window.location.assign(window.location.toString()));
+      return Promise.reject({
+        message: "your session has expired. Please re-authenticate",
+        code: 401,
+      });
+    }
+    return res;
+  }
 }
 
 export { client, config };

@@ -1,5 +1,5 @@
 <template>
-  <span v-if="isLoading">loading</span>
+  <span v-if="isLoading">&nbsp;saving</span>
   <textarea
     name="note"
     class="book__note"

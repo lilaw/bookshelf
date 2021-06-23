@@ -1,13 +1,13 @@
-import { useQuery } from "vue-query";
+import { useQuery, useQueryClient } from "vue-query";
 import {
   getToken,
   login as authLogin,
   logout as authLogout,
   register as authRegister,
 } from "@/utils/auth-provider";
-import { provide, Ref, ref, InjectionKey, inject, watch } from "vue";
+import { provide, Ref, ref, InjectionKey, inject, watch, reactive } from "vue";
 import { client, config } from "@/utils/client";
-
+import { item } from "@/utils/listItems";
 /**
  * type for provider ********************************************
  */
@@ -26,6 +26,7 @@ type value = {
   logout: () => void;
 };
 export { form, user, responseError, value };
+
 /**
  * end of type define *****************************************
  */
@@ -33,19 +34,36 @@ export { form, user, responseError, value };
 const valueKey: InjectionKey<value> = Symbol();
 
 export function authProvider() {
-  function getUser(): Promise<undefined | user> {
-    return getToken().then((token) => {
-      console.log("gettoken");
-      if (token) {
-        return client("bootstrap", { token }).then((data) => data.user);
-      } else {
-        return Promise.resolve(undefined);
-      }
-    });
-  }
+  const queryClient = useQueryClient();
   const user: Ref<user | undefined> = ref(undefined);
-  const result = useQuery<user | undefined, responseError>("user", getUser, {
+
+  function bootstrap(): Promise<user | undefined> {
+    function validateToken(token: string | null) {
+      return token ? token : Promise.reject("no token in localStorage");
+    }
+    function fetchUser(token: string) {
+      return client("bootstrap", { token });
+    }
+    function cacheListitems(data: { user: user; listitems: item[] }) {
+      queryClient.setQueryData("list-items", data.listitems);
+      return data.user;
+    }
+    function handleNoToken(reason: unknown) {
+      if (typeof reason === "string" && reason === "no token in localStorage")
+        return undefined;
+      return Promise.reject(reason);
+    }
+
+    return getToken()
+      .then(validateToken)
+      .then(fetchUser)
+      .then(cacheListitems)
+      .catch(handleNoToken);
+  }
+
+  const result = useQuery<user | undefined, responseError>("user", bootstrap, {
     staleTime: Infinity,
+    retry: false,
   });
   const {
     status,
