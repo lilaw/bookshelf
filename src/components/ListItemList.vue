@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div v-if="listItems">
     <p v-if="listItems.length === 0">
       <slot name="welcome" />
     </p>
-    <p v-else-if="filtteredListItems.length === 0">
+    <p v-else-if="filtteredListItems.length !== 0">
       <slot name="explore" />
     </p>
 
@@ -13,11 +13,13 @@
       </li>
     </ul>
   </div>
+  <div v-else>loading your finished books</div>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue";
-import { useListItems, item } from "@/utils/listItems";
+import { useListItems } from "@/utils/listItems";
+import type { item } from "@/types";
 import BookRow from "@/components/BookRow.vue";
 
 export default defineComponent({
