@@ -13,7 +13,7 @@
           {{ book.title }}
         </h2>
         <span class="book__author">{{ book.author }}</span>
-        <div class="book__button" v-if="!book.loadingBook">
+        <div class="book__button" v-if="!loadingBook">
           <tooltip-status :bookId="bookId" />
         </div>
         <div class="book__rate" v-if="listItem">
@@ -22,7 +22,9 @@
         <div class="book__date" v-if="listItem">
           <i class="el-icon-date"></i>
           <span>{{ formatDate(listItem.startDate) }}</span>
-          <span v-if="listItem.finishDate">— &nbsp;{{ formatDate(listItem.finishDate) }}</span>
+          <span v-if="listItem.finishDate"
+            >— &nbsp;{{ formatDate(listItem.finishDate) }}</span
+          >
         </div>
         <p class="book__synopsis">{{ book.synopsis.substring(0, 500) }}...</p>
       </div>
@@ -48,7 +50,7 @@ export default defineComponent({
   setup() {
     const route = useRoute();
     const bookId = computed(() => route.params.bookId as string);
-    const book = useBook(bookId.value);
+    const { data: book, isLoading: loadingBook } = useBook(bookId.value);
     const listItem = useListItem(bookId.value);
 
     function formatDate(isostring: string): string {
@@ -58,7 +60,7 @@ export default defineComponent({
       }).format(new Date(isostring));
     }
 
-    return { book, bookId, listItem, formatDate };
+    return { book, loadingBook, bookId, listItem, formatDate };
   },
   components: {
     TooltipStatus,

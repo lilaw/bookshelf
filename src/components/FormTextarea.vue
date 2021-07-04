@@ -13,7 +13,8 @@
 
 <script lang="ts">
 import { defineComponent, PropType, ref } from "vue";
-import { item, useUdateListItem } from "@/utils/listItems";
+import { useUdateListItem } from "@/utils/listItems";
+import type { item } from "@/types";
 import debounceFn from "debounce-fn";
 
 export default defineComponent({

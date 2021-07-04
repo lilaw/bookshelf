@@ -5,27 +5,21 @@ import {
   logout as authLogout,
   register as authRegister,
 } from "@/utils/auth-provider";
-import { provide, Ref, ref, InjectionKey, inject, watch, reactive } from "vue";
-import { client, config } from "@/utils/client";
-import { item } from "@/utils/listItems";
+import { provide, Ref, ref, InjectionKey, inject, watch } from "vue";
+import { areYouABadBody, client, config } from "@/utils/client";
+import type { HttpError, item, user, form } from "@/types";
+import { isBootstrapData } from "@/type-guards";
+
 /**
  * type for provider ********************************************
  */
-type form = {
-  [K in "username" | "password"]: string;
-};
-type user = {
-  [k in "id" | "token" | "username"]: string;
-};
 
-type responseError = { message: string; code: number };
 type value = {
   user: Ref<user>;
   login: (form: form) => Promise<user>;
   register: (form: form) => Promise<user>;
   logout: () => void;
 };
-export { form, user, responseError, value };
 
 /**
  * end of type define *****************************************
@@ -44,8 +38,8 @@ export function authProvider() {
     function fetchUser(token: string) {
       return client("bootstrap", { token });
     }
-    function cacheListitems(data: { user: user; listitems: item[] }) {
-      queryClient.setQueryData("list-items", data.listitems);
+    function cacheListitems(data: { user: user; listItems: item[] }) {
+      queryClient.setQueryData("list-items", data.listItems);
       return data.user;
     }
     function handleNoToken(reason: unknown) {
@@ -57,11 +51,12 @@ export function authProvider() {
     return getToken()
       .then(validateToken)
       .then(fetchUser)
+      .then(areYouABadBody(isBootstrapData))
       .then(cacheListitems)
       .catch(handleNoToken);
   }
 
-  const result = useQuery<user | undefined, responseError>("user", bootstrap, {
+  const result = useQuery<user | undefined, HttpError>("user", bootstrap, {
     staleTime: Infinity,
     retry: false,
   });

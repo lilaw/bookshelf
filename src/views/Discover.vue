@@ -18,7 +18,7 @@
   <main v-if="books">
     <section v-if="isError">
       <h3>There was an error:</h3>
-      <pre>{{ error.emssage }}</pre>
+      <pre>{{ error.message }}</pre>
     </section>
     <ul class="books">
       <li v-for="book in books" :key="book.id">

@@ -1,14 +1,12 @@
-// model 
+// model
 
 export type book = {
-  [K in
-    | "title"
-    | "author"
-    | "coverImageUrl"
-    | "id"
-    | "publisher"
-    | "synopsis"]: number;
-} & {
+  title: string;
+  author: string;
+  coverImageUrl: string;
+  publisher: string;
+  synopsis: string;
+  id: string;
   pageCount: number;
 };
 
@@ -21,4 +19,24 @@ export type item = {
   ownerId: string;
   rating: number;
   startDate: number;
+};
+
+export type form = {
+  [K in "username" | "password"]: string;
+};
+
+export type HttpError =
+  | { type: "BadStatus"; code: number; message: string }
+  | {
+      type: "BadBody";
+      message: string;
+    };
+
+export type errorInfo = {
+  code: number;
+  message: string;
+};
+
+export type user = {
+  [k in "id" | "token" | "username"]: string;
 };

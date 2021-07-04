@@ -24,7 +24,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import ListItemList from "@/components/ListItemList.vue";
-import { item } from "@/utils/listItems";
+import { item } from "@/types";
 export default defineComponent({
   setup() {
     function filter(item: item) {

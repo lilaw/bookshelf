@@ -35,28 +35,22 @@
 <script lang="ts">
 import { defineComponent, PropType, reactive, toRefs } from "vue";
 import { useQuery } from "vue-query";
-import { form, user } from "@/context/authProvider";
-type state = {
-  username: string;
-  password: string;
-  open: boolean;
-};
+import type { user, HttpError, form } from "@/types";
 
 export default defineComponent({
   props: {
     modal: { type: String as PropType<"register" | "login"> },
     handler: {
       type: Function as PropType<(form: form) => Promise<user>>,
+      required: true,
     },
   },
   setup(prop) {
-    const state = reactive<state>({ username: "", password: "", open: false });
+    const state = reactive({ username: "", password: "", open: false });
 
-    // todo: how to add a correctly type
-    const { isFetching, isError, error, refetch } = useQuery(
+    const { isFetching, isError, error, refetch } = useQuery<user, HttpError>(
       "login",
       () =>
-        prop.handler &&
         prop.handler({ username: state.username, password: state.password }),
       {
         cacheTime: 0,

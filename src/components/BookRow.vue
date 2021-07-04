@@ -21,7 +21,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 import TooltipStatus from "@/components/TooltipStatus.vue";
-import { book } from "@/utils/listItems";
+import type { book } from "@/types";
 
 export default defineComponent({
   props: {

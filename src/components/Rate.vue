@@ -27,7 +27,8 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue";
-import { item, useUdateListItem } from "@/utils/listItems";
+import { useUdateListItem } from "@/utils/listItems";
+import type { item } from "@/types";
 
 export default defineComponent({
   props: {

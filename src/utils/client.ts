@@ -1,4 +1,5 @@
 import { logout } from "@/utils/auth-provider";
+import { isErrorInfoData } from "@/type-guards";
 
 const apiURL = "https://bookshelf.jk/api";
 
@@ -8,10 +9,11 @@ type config = {
   headers?: string;
   method?: "GET" | "DELETE" | "PUT" | "POST";
 };
+
 function client(
   endpoint: string,
   { data, token, headers: customHeaders, method, ...customConfig }: config = {}
-) {
+): Promise<unknown> {
   const config = {
     method: method ? method : "GET",
     headers: {
@@ -26,18 +28,50 @@ function client(
   return window
     .fetch(`${apiURL}/${endpoint}`, config as RequestInit)
     .then(unauthorized)
-    .then((res) => res.json());
+    .then(responseAndJSON)
+    .then(areYouABadStatus);
 
-  async function unauthorized(res: Response) {
+  function unauthorized(res: Response) {
     if (res.status === 401) {
       logout().then(() => window.location.assign(window.location.toString()));
       return Promise.reject({
+        type: "BadStatus",
         message: "your session has expired. Please re-authenticate",
         code: 401,
       });
     }
     return res;
   }
+  async function responseAndJSON(response: Response) {
+    const json = await response.json();
+    return { response, json };
+  }
 }
 
-export { client, config };
+function areYouABadStatus(data: { response: Response; json: unknown }) {
+  if (data.response.ok) {
+    return data.json;
+  } else {
+    return Promise.reject({
+      type: "BadStatus",
+      code: data.response.status,
+      message: isErrorInfoData(data.json)
+        ? data.json.message
+        : `there are some error: \n ${JSON.stringify(data.json, null, 2)}`,
+    });
+  }
+}
+
+// eslint-disable-next-line
+function areYouABadBody<T>(check: (x: any) => x is T) {
+  return function areYouABadBodyWithCheck(json: unknown): T | Promise<never> {
+    if (check(json)) return json;
+    return Promise.reject({
+      type: "BadBody",
+      message: `this http body did't match type of ${check.name}. 
+       ${JSON.stringify(json, null, 2)}`,
+    });
+  };
+}
+
+export { client, config, areYouABadBody };
