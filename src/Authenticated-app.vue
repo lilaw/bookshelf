@@ -3,26 +3,19 @@
     <Header />
     <el-row>
       <el-col :span="4">
-        <nav class="nav">
-          <router-link class="nav__link" to="/list"
-            ><span>List</span></router-link
-          >
-          <router-link class="nav__link" to="/finished"
-            ><span>Finished</span></router-link
-          >
-          <router-link class="nav__link" to="/discover"
-            ><span>Discover</span></router-link
-          >
-        </nav>
+        <sidebar />
       </el-col>
-      <el-col :span="20" class="content"> <router-view /> </el-col>
+      <el-col :span="20" class="content">
+        <router-view :key="$route.fullPath" />
+      </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
 import { defineComponent } from "vue";
-import Header from "@/components/Header.vue";
+import Header from "@/layout/Header.vue";
+import Sidebar from "@/layout/Sidebar.vue";
 
 export default defineComponent({
   setup() {
@@ -30,6 +23,7 @@ export default defineComponent({
   },
   components: {
     Header,
+    Sidebar,
   },
 });
 </script>
