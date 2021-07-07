@@ -4,7 +4,7 @@
       <template v-slot:welcome>
         <span>
           Hey there! This is where books will go when you've finished reading
-          them. Get started by heading over to 
+          them. Get started by heading over to
           <router-link to="/discover">the Discover page</router-link> to add
           books to your list.
         </span>

@@ -83,7 +83,6 @@ export default defineComponent({
   align-items: center;
   margin-left: -15px;
   height: 100%;
-
 }
 .button {
 }

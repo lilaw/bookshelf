@@ -42,7 +42,6 @@ const bookSearchFunction = function bookSearchFunction(query: string) {
       .then((data) => data.books);
 };
 
-
 function discoverBookSearch(query: string) {
   const result = useQuery<book[], HttpError>({
     queryKey: "bookSearch",

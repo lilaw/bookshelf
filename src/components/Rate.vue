@@ -20,7 +20,7 @@
           }"
         ></i>
       </label>
-      <p v-if="isError">there are a error: {{error.message}}</p>
+      <p v-if="isError">there are a error: {{ error.message }}</p>
     </template>
   </div>
 </template>

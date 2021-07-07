@@ -13,7 +13,7 @@
           <p class="book__synopsis">{{ book.synopsis.substring(0, 500) }}...</p>
         </div>
       </div>
-    </router-link >
+    </router-link>
     <TooltipStatus :bookId="book.id" />
   </section>
 </template>
