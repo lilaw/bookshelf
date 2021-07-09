@@ -6,7 +6,7 @@ const apiURL = "https://bookshelf.jk/api";
 type config = {
   data?: { [k in string]: string | number | null | undefined };
   token?: string;
-  headers?: string;
+  headers?: Record<string, string | undefined>;
   method?: "GET" | "DELETE" | "PUT" | "POST";
 };
 
@@ -15,16 +15,15 @@ function client(
   { data, token, headers: customHeaders, method, ...customConfig }: config = {}
 ): Promise<unknown> {
   const config = {
-    method: method ? method : "GET",
+    method: data ? "POST" : "GET",
     headers: {
       Authorization: token ? `Bearer ${token}` : undefined,
       "Content-Type": data ? "application/json" : undefined,
-      customHeaders,
+      ...customHeaders,
     },
     body: data ? JSON.stringify(data) : undefined,
     ...customConfig,
   };
-
   return window
     .fetch(`${apiURL}/${endpoint}`, config as RequestInit)
     .then(unauthorized)

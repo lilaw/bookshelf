@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "REACT_APP_API_URL=https://bookshelf.jk/api vue-cli-service serve",
+    "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
+    "test:unit": "vue-cli-service test:unit ",
     "test:unit-watch": "vue-cli-service test:unit --watch",
     "test:unit-coverage": "vue-cli-service test:unit --watch=false --coverage",
     "test:unit-debug": "node --inspect-brk  ./node_modules/.bin/vue-cli-service test:unit --watch --runInBand",
@@ -21,7 +21,8 @@
     "vue": "^3.0.0",
     "vue-query": "^1.5.1",
     "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0"
+    "vuex": "^4.0.0-0",
+    "whatwg-fetch": "^3.6.2"
   },
   "devDependencies": {
     "@types/jest": "^24.0.19",

@@ -23,6 +23,9 @@ module.exports = {
   },
 
   overrides: [
+    /**
+     * tests file
+     */
     {
       files: [
         "**/__tests__/*.{j,t}s?(x)",
@@ -31,6 +34,14 @@ module.exports = {
       env: {
         jest: true,
       },
+    },
+    /**
+     * test config
+     */
+    {
+      extends: ["plugin:node/recommended"],
+      files: ["jest.config.js"],
+      env: { commonjs: true, node: true },
     },
   ],
 };

@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "references": [{ "name": "my-lib", "path": ".." }],
+  "compilerOptions": {
+    "types": ["jest"],
+    "rootDir": ".",
+    "strict": false,
+    "noEmit": true
+  },
+  "include": [
+    "**/__tests__/**/*.ts",
+    "**/*.ts",
+    "**/__tests__/**/*.tsx"
+  ]
+}

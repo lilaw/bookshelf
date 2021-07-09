@@ -29,8 +29,9 @@ function ls(key, defaultVal) {
   }
   return Number.isFinite(val) ? val : defaultVal
 }
-const apiUrl = "https://bookshelf.jk/api"
-const authUrl = "https://auth-provider.jk/auth"
+const apiUrl =  process.env.BOOK_APP_API_URL
+const authUrl = process.env.BOOK_APP_AUTH_URL
+
 
 const handlers = [
   rest.post(`${authUrl}/login`, async (req, res, ctx) => {

@@ -2,8 +2,8 @@
 
 import { errorInfo, item, book, user } from "./types";
 
-export function isErrorInfoData(candidate: any): candidate is errorInfo {
-  return typeof candidate.code === "number" && candidate.message === "string";
+export function isErrorInfoData(rawData: any): rawData is errorInfo {
+  return isObject(rawData) && typeof rawData.code === "number" && typeof rawData.message === "string";
 }
 
 export function isBookData(rawData: any): rawData is { book: book } {

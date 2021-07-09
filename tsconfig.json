@@ -11,10 +11,11 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
+    "composite": true,
     "baseUrl": ".",
     "types": [
       "webpack-env",
-      "jest"
+      // "jest"
     ],
     "paths": {
       "@/*": [
@@ -32,12 +33,9 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx",
-    "src/utils/client.js",
-    "src/utils/auth-provider.ts"
-  ],
+     ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/__tests__/*.ts"
   ]
 }
