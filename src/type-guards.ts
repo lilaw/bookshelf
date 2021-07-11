@@ -3,7 +3,11 @@
 import { errorInfo, item, book, user } from "./types";
 
 export function isErrorInfoData(rawData: any): rawData is errorInfo {
-  return isObject(rawData) && typeof rawData.code === "number" && typeof rawData.message === "string";
+  return (
+    isObject(rawData) &&
+    typeof rawData.code === "number" &&
+    typeof rawData.message === "string"
+  );
 }
 
 export function isBookData(rawData: any): rawData is { book: book } {
@@ -20,6 +24,10 @@ export function isListItemsData(
   );
 }
 
+export function isItemData(rawData: any): rawData is { listItem: item } {
+  return isObject(rawData) && isItemLike(rawData.listItem);
+}
+
 export function isBootstrapData(
   rawData: any
 ): rawData is { user: user; listItems: item[] } {
@@ -31,7 +39,6 @@ export function isBootstrapData(
 }
 
 export function isBooksData(rawData: any): rawData is { books: book[] } {
-  debugger;
   return isObject(rawData) && isBooksLike(rawData.books);
 }
 
@@ -61,6 +68,7 @@ export function isBookLike(candidate: any): candidate is book {
 
 export function isItemLike(candidate: any): candidate is item {
   if (candidate !== null && typeof candidate === "object") {
+    debugger;
     return (
       isBookLike(candidate.book) &&
       typeof candidate.bookId === "string" &&

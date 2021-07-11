@@ -29,9 +29,9 @@ function ls(key, defaultVal) {
   }
   return Number.isFinite(val) ? val : defaultVal
 }
-const apiUrl =  process.env.BOOK_APP_API_URL
-const authUrl = process.env.BOOK_APP_AUTH_URL
-
+const apiUrl =  process.env.VUE_APP_BOOK_APP_API_URL
+const authUrl = process.env.VUE_APP_BOOK_APP_AUTH_URL
+console.log({apiUrl, authUrl, env: process.env})
 
 const handlers = [
   rest.post(`${authUrl}/login`, async (req, res, ctx) => {

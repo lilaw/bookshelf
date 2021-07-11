@@ -4,7 +4,7 @@ import { useClient } from "@/context/authProvider";
 import { config } from "@/utils/client";
 import { computed, ComputedRef, Ref } from "vue";
 import type { item, HttpError } from "@/types";
-import { isItemLike, isListItemsData } from "@/type-guards";
+import { isItemLike, isListItemsData, isItemData } from "@/type-guards";
 import { areYouABadBody } from "@/utils/client";
 
 type updateItemPayload = {
@@ -78,7 +78,9 @@ function useUdateListItem(config?: config) {
       data: payload,
       method: "PUT",
       ...config,
-    }).then(areYouABadBody(isItemLike));
+    })
+      .then(areYouABadBody(isItemData))
+      .then((data) => data.listItem);
   }
   function optimisticUpdate(payload: updateItemPayload): unknown {
     const oldvalue = queryClient.getQueryData("list-items");

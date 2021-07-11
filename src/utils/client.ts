@@ -12,7 +12,7 @@ type config = {
 
 function client(
   endpoint: string,
-  { data, token, headers: customHeaders, method, ...customConfig }: config = {}
+  { data, token, headers: customHeaders, ...customConfig }: config = {}
 ): Promise<unknown> {
   const config = {
     method: data ? "POST" : "GET",

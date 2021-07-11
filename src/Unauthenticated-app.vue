@@ -1,33 +1,41 @@
 <template>
   <main class="container">
     <h1 class="hero">Bookshelf</h1>
-    <div class="form">
-      <Form modal="register" :handler="register">
-        <template v-slot:open-button="slotProps">
-          <el-button v-on:click="slotProps.openDialog()">register</el-button>
+    <section class="control">
+      <app-modal>
+        <template #modal-openButton="{ openModal }">
+          <el-button @click="openModal">register</el-button>
         </template>
-        <template v-slot:button-text="slotProps">
-          <span v-if="slotProps.isFetching">loading</span>
-          <span v-else>Regist</span>
+        <template #modal-title>
+          <h3>Register</h3>
         </template>
-      </Form>
-      <Form modal="login" :handler="login">
-        <template v-slot:open-button="slotProps">
-          <el-button v-on:click="slotProps.openDialog()">login</el-button>
+        <template #modal-content>
+          <login-form :handleSubmit="register" submitButtonText="register">
+          </login-form>
         </template>
-        <template v-slot:button-text="slotProps">
-          <span v-if="slotProps.isFetching">loading</span>
-          <span v-else>Login</span>
+      </app-modal>
+
+      <app-modal>
+        <template #modal-openButton="{ openModal }">
+          <el-button @click="openModal">login</el-button>
         </template>
-      </Form>
-    </div>
+        <template #modal-title>
+          <h3>login</h3>
+        </template>
+        <template #modal-content>
+          <login-form :handleSubmit="login" submitButtonText="login">
+          </login-form>
+        </template>
+      </app-modal>
+    </section>
   </main>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import Form from "@/components/Form.vue";
+import LoginForm from "@/components/LoginForm.vue";
 import { useAuth } from "@/context/authProvider";
+import AppModal from "@/components/AppModal.vue";
 
 export default defineComponent({
   name: "Home",
@@ -40,7 +48,8 @@ export default defineComponent({
   },
   methods: {},
   components: {
-    Form,
+    LoginForm,
+    AppModal,
   },
 });
 </script>
@@ -60,5 +69,9 @@ export default defineComponent({
 }
 .hero {
   font-size: 3rem;
+}
+.control {
+  display: flex;
+  column-gap: 2rem;
 }
 </style>

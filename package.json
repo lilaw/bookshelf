@@ -16,6 +16,7 @@
     "debounce-fn": "^5.0.0",
     "dotenv": "^10.0.0",
     "element-plus": "^1.0.2-beta.48",
+    "eslint-plugin-node": "^11.1.0",
     "match-sorter": "^6.3.0",
     "node-match-path": "^0.6.3",
     "vue": "^3.0.0",
