@@ -32,7 +32,7 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
-    "src/**/*.vue",
+    "src/**/*.vue", "src/components/__tests__/as.js",
      ],
   "exclude": [
     "node_modules",

@@ -21,7 +21,7 @@ export default defineComponent({
 <template>
   <div>
     <slot name="modal-openButton" :openModal="openModal" />
-    <el-dialog v-model="open" width="30%" title="ere">
+    <el-dialog v-model="open" width="30%" title="dialog">
       <template #title>
         <section class="modal__title">
           <slot name="modal-title">
@@ -30,12 +30,13 @@ export default defineComponent({
         </section>
       </template>
 
-      <slot name="modal-content">
-        <p>content</p>
-      </slot>
+      <slot name="modal-content">content area</slot>
 
-      <template #foot>
-        <slot name="modal-buttons" />
+      <h3>dfdfdf</h3>
+      <template #footer>
+        <span class="dialog-footer">
+          <slot name="modal-footer" />
+        </span>
       </template>
     </el-dialog>
   </div>

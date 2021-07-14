@@ -31,7 +31,6 @@ function ls(key, defaultVal) {
 }
 const apiUrl =  process.env.VUE_APP_BOOK_APP_API_URL
 const authUrl = process.env.VUE_APP_BOOK_APP_AUTH_URL
-console.log({apiUrl, authUrl, env: process.env})
 
 const handlers = [
   rest.post(`${authUrl}/login`, async (req, res, ctx) => {

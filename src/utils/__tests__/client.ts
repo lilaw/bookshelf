@@ -4,7 +4,7 @@ import { server, rest } from "@/test/server";
 import * as authMock from "../auth-provider";
 jest.mock("../auth-provider");
 
-const apiURL = process.env.BOOK_APP_API_URL;
+const apiURL = process.env.VUE_APP_BOOK_APP_API_URL;
 const endpoint = "test-endpoint";
 
 test("fetch at the endpoint wiht GET requests", async () => {
@@ -103,7 +103,7 @@ test("logout user if request return 401", async () => {
     message: "your session has expired. Please re-authenticate",
     code: 401,
   };
-  debugger;
+
   expect(actual).toEqual(expectError);
   expect(authMock.logout).toHaveBeenCalledTimes(1);
 });

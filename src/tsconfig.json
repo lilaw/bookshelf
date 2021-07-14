@@ -11,5 +11,5 @@
     "**/__tests__/**/*.ts",
     "**/*.ts",
     "**/__tests__/**/*.tsx"
-  ]
+, "components/__tests__/AppModal.js"  ]
 }
