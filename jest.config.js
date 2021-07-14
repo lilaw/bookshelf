@@ -1,4 +1,4 @@
-const resolve = require('resolve')
+const resolve = require("resolve");
 const fs = require("fs");
 
 module.exports = {
@@ -6,16 +6,12 @@ module.exports = {
   transform: {
     "^.+\\.vue$": "vue-jest",
   },
-  testMatch: ["**/__tests__/**/*.ts"],
   roots: ["<rootDir>/src"],
-  testEnvironment: resolve.sync('jest-environment-jsdom', {
-    basedir: require.resolve('jest'),
-  }),
-  setupFiles: [require.resolve('whatwg-fetch')],
+  setupFiles: [require.resolve("whatwg-fetch")],
   setupFilesAfterEnv: fs.existsSync("src/setupTests.js")
     ? ["<rootDir>/src/setupTests.js"]
     : [],
-    resetMocks: true,
+  resetMocks: true,
   globals: {
     "ts-jest": {
       diagnostics: {
