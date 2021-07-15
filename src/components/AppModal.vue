@@ -32,7 +32,6 @@ export default defineComponent({
 
       <slot name="modal-content">content area</slot>
 
-      <h3>dfdfdf</h3>
       <template #footer>
         <span class="dialog-footer">
           <slot name="modal-footer" />

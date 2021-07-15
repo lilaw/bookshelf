@@ -73,7 +73,7 @@ test("method set to POST if data is provide", async () => {
 });
 
 test("reject wiht badStatus if HTTP code >= 300", async () => {
-  const testError = { code: 500, message: "server is under maintenance." };
+  const testError = { status: 500, message: "server is under maintenance." };
   server.use(
     rest.get(`${apiURL}/${endpoint}`, async (req, res, ctx) => {
       return res(ctx.status(500), ctx.json(testError));
@@ -90,7 +90,7 @@ test("logout user if request return 401", async () => {
   jest.spyOn(authMock, "logout");
   authMock.logout.mockImplementation(() => Promise.resolve());
 
-  const testError = { code: 401, message: "fake message" };
+  const testError = { status: 401, message: "fake message" };
   server.use(
     rest.get(`${apiURL}/${endpoint}`, async (req, res, ctx) => {
       return res(ctx.status(401), ctx.json(testError));
@@ -101,7 +101,7 @@ test("logout user if request return 401", async () => {
   const expectError = {
     type: "BadStatus",
     message: "your session has expired. Please re-authenticate",
-    code: 401,
+    status: 401,
   };
 
   expect(actual).toEqual(expectError);

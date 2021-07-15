@@ -2,30 +2,27 @@
   <div>
     <el-form ref="form" label-width="120px" @submit.prevent="refetch">
       <el-form-item label="User name">
-        <el-input v-model="username"></el-input>
+        <el-input v-model="username" data-testid="username"></el-input>
       </el-form-item>
       <el-form-item label="Password">
         <el-input
           type="password"
           v-model="password"
           autocomplete="off"
+          data-testid="password"
         ></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button
-          @click="refetch"
-          :disabled="isFetching"
-          native-type="“submit”"
-        >
-          <i class="el-icon-loading" v-if="isFetching" />
+        <el-button @click="refetch" :disabled="isFetching" native-type="submit" data-testid="submitForm">
+          <i class="el-icon-loading" aria-label="loading" v-if="isFetching" />
           <span v-else>{{ submitButtonText }}</span>
         </el-button>
         &nbsp;
       </el-form-item>
     </el-form>
-    <span class="dialog-footer">
-      <p v-if="isError">{{ error.message }}</p>
-    </span>
+    <section class="error-warpper">
+      <error-message v-if="isError" :error="error" />
+    </section>
   </div>
 </template>
 
@@ -33,6 +30,8 @@
 import { defineComponent, PropType, reactive, toRefs } from "vue";
 import { useQuery } from "vue-query";
 import type { user, HttpError, form } from "@/types";
+import {ErrorMessage} from '@/components/lib';
+
 
 export default defineComponent({
   props: {
@@ -61,6 +60,9 @@ export default defineComponent({
       }
     );
     return { ...toRefs(state), isError, isFetching, error, refetch };
+  },
+  components: {
+    ErrorMessage
   },
 });
 </script>

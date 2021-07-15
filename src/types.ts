@@ -26,14 +26,14 @@ export type form = {
 };
 
 export type HttpError =
-  | { type: "BadStatus"; code: number; message: string }
+  | { type: "BadStatus"; status: number; message: string }
   | {
       type: "BadBody";
       message: string;
     };
 
 export type errorInfo = {
-  code: number;
+  status: number;
   message: string;
 };
 

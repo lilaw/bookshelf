@@ -1,22 +1,27 @@
 import { QueryClient, VUE_QUERY_CLIENT } from "vue-query";
 import { provide, onUnmounted } from "vue";
-// import type { QueryClient, TError } from "react-query/types";
+
+const queryClient = new QueryClient();
 
 function useQueryProvider(): void {
-  const queryClient = new QueryClient();
-
   queryClient.setDefaultOptions({
     queries: {
       refetchOnWindowFocus: false,
-      // retry(failureCount: number, error) {
-      //   if (error.status === 404) return false;
-      //   else if (failureCount < 2) return true;
-      //   else return false;
-      // },
+      retry(failureCount: number, error: any) {
+        if (
+          typeof error === "object" &&
+          error !== null &&
+          typeof error.status === "number"
+        ) {
+          return error.status >= 500 ? true : false;
+        } else if (failureCount < 2) return true;
+        return false;
+      },
     },
     mutations: {
-      onError: (err, variables, recover) =>
-        typeof recover === "function" ? recover() : null,
+      onError(err, variables, recover) {
+        typeof recover === "function" ? recover() : null;
+      },
       onSettled: () => queryClient.invalidateQueries("list-items"),
     },
   });
@@ -29,4 +34,4 @@ function useQueryProvider(): void {
   });
 }
 
-export { useQueryProvider };
+export { useQueryProvider, queryClient };

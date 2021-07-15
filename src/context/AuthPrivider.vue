@@ -1,6 +1,10 @@
 <template>
-  <div v-if="isLoading">is loading</div>
-  <div v-else-if="isError">There's a problem. {{ error.message }}</div>
+  <div v-if="isLoading">
+    <full-page-spinner />
+  </div>
+  <div v-else-if="isError">
+    <error-message :error="error" />
+  </div>
   <div v-else-if="isSuccess">
     <slot> </slot>
   </div>
@@ -9,15 +13,20 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="tsx">
 import { defineComponent } from "vue";
 import { authProvider } from "./authProvider";
+import { FullPageSpinner, ErrorMessage } from "@/components/lib";
 
 export default defineComponent({
   setup() {
     const { status, isLoading, isError, isSuccess, error } = authProvider();
 
     return { status, isLoading, isError, isSuccess, error };
+  },
+  components: {
+    FullPageSpinner,
+    ErrorMessage,
   },
 });
 </script>

@@ -6,6 +6,7 @@ import ElementPlus from "element-plus";
 const title = "hello here";
 const content = "Lorem ipsum dolor sit amet consectetur, adi";
 const foot = "end of file";
+
 const example = {
   template: `
     <app-modal>

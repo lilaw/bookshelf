@@ -2,7 +2,7 @@
   <header class="header">
     <span class="hero">Bookshelf</span>
     <span class="header__username">{{ user.username }}</span>
-    <el-button type="primary" class="header__logout" @click.prevent="logout"
+    <el-button type="primary" class="header__logout" aria-label="logout" @click.prevent="logout"
       >Logout</el-button
     >
   </header>

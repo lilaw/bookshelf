@@ -70,7 +70,6 @@ export function isBookLike(candidate: any): candidate is book {
 
 export function isItemLike(candidate: any): candidate is item {
   if (candidate !== null && typeof candidate === "object") {
-    debugger;
     return (
       isBookLike(candidate.book) &&
       typeof candidate.bookId === "string" &&
