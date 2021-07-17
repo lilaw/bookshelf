@@ -2,10 +2,12 @@
 
 import { errorInfo, item, book, user } from "./types";
 
+export const isUserData = isUserLike;
+
 export function isErrorInfoData(rawData: any): rawData is errorInfo {
   return (
     isObject(rawData) &&
-    typeof rawData.code === "number" &&
+    typeof rawData.status === "number" &&
     typeof rawData.message === "string"
   );
 }

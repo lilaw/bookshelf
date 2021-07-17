@@ -6,9 +6,14 @@ import {
   register as authRegister,
 } from "@/utils/auth-provider";
 import { provide, Ref, ref, InjectionKey, inject, watch } from "vue";
-import { areYouABadBody, client, config } from "@/utils/client";
+import {
+  areYouABadBody,
+  areYouABadStatus,
+  client,
+  config,
+} from "@/utils/client";
 import type { HttpError, item, user, form } from "@/types";
-import { isBootstrapData } from "@/type-guards";
+import { isBootstrapData, isUserLike, isUserData } from "@/type-guards";
 
 /**
  * type for provider ********************************************
@@ -75,10 +80,20 @@ export function authProvider() {
   });
 
   function login(form: form) {
-    return authLogin(form).then((newUser) => (user.value = newUser));
+    return authLogin(form)
+      .then(formatData)
+      .catch(formatError)
+      .then(areYouABadStatus)
+      .then(areYouABadBody(isUserData))
+      .then((newUser) => (user.value = newUser));
   }
   function register(form: form) {
-    return authRegister(form).then((newUser) => (user.value = newUser));
+    return authRegister(form)
+      .then(formatData)
+      .catch(formatError)
+      .then(areYouABadStatus)
+      .then(areYouABadBody(isUserData))
+      .then((newUser) => (user.value = newUser));
   }
   function logout() {
     authLogout();
@@ -109,5 +124,21 @@ export function useClient() {
   const token = user.value?.token;
   return function withUserClient(endpoint: string, config?: config) {
     return client(endpoint, { token, ...config });
+  };
+}
+
+function formatError(data: { status: number; message: string }) {
+  return {
+    response: { ok: false, status: data.status } as Response,
+    json: data,
+  };
+}
+function formatData(data: { status: number; message: string }): {
+  response: Response;
+  json: unknown;
+} {
+  return {
+    response: { ok: true, status: data.status } as Response,
+    json: data,
   };
 }

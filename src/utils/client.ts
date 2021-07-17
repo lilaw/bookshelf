@@ -36,7 +36,7 @@ function client(
       return Promise.reject({
         type: "BadStatus",
         message: "your session has expired. Please re-authenticate",
-        code: 401,
+        status: 401,
       });
     }
     return res;
@@ -47,16 +47,19 @@ function client(
   }
 }
 
-function areYouABadStatus(data: { response: Response; json: unknown }) {
+function areYouABadStatus(data: {
+  response: Response;
+  json: unknown;
+}): unknown {
   if (data.response.ok) {
     return data.json;
   } else {
     return Promise.reject({
       type: "BadStatus",
-      code: data.response.status,
+      status: data.response.status,
       message: isErrorInfoData(data.json)
         ? data.json.message
-        : `there are some error: \n ${JSON.stringify(data.json, null, 2)}`,
+        : `this is a unhandle error: \n ${JSON.stringify(data.json, null, 2)}`,
     });
   }
 }
@@ -73,4 +76,4 @@ function areYouABadBody<T>(check: (x: any) => x is T) {
   };
 }
 
-export { client, config, areYouABadBody };
+export { client, config, areYouABadBody, areYouABadStatus };
