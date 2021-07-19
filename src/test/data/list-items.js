@@ -44,6 +44,7 @@ async function create({
   startDate = Date.now(),
   finishDate = null,
 }) {
+  debugger
   const id = hash(`${bookId}${ownerId}`)
   if (listItems[id]) {
     const error = new Error(
@@ -125,4 +126,4 @@ async function reset() {
   persist()
 }
 
-export {authorize, create, read, update, remove, readMany, readByOwner, reset}
+export {authorize, create, read, update, remove, readMany, readByOwner, reset, listItems}

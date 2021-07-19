@@ -75,7 +75,6 @@ export function authProvider() {
   } = result;
 
   watch(userFromServer, (data) => {
-    console.log("featch user");
     user.value = data;
   });
 

@@ -33,4 +33,4 @@ async function reset() {
   books = [...booksData]
 }
 
-export {create, query, read, readManyNotInList, reset}
+export {create, query, read, readManyNotInList, reset, books}
