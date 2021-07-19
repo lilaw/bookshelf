@@ -1,5 +1,6 @@
 <template>
-  <span v-if="isLoading">&nbsp;saving</span>
+  <i class="el-icon-loading" aria-label="loading" v-if="isLoading" />
+  <ErrorMessage :error="error" v-if="isError" />
   <textarea
     name="note"
     class="book__note"
@@ -8,6 +9,7 @@
     rows="10"
     @input="updateNoteChange"
     v-model="noteValue"
+    aria-label="note"
   ></textarea>
 </template>
 
@@ -16,6 +18,7 @@ import { defineComponent, PropType, ref } from "vue";
 import { useUdateListItem } from "@/utils/listItems";
 import type { item } from "@/types";
 import debounceFn from "debounce-fn";
+import { ErrorMessage } from "@/components/lib";
 
 export default defineComponent({
   props: {
@@ -35,6 +38,9 @@ export default defineComponent({
     }
 
     return { isError, error, isLoading, noteValue, updateNoteChange };
+  },
+  components: {
+    ErrorMessage,
   },
 });
 </script>

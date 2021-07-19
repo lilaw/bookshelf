@@ -26,20 +26,22 @@ function client(
   };
   return window
     .fetch(`${apiURL}/${endpoint}`, config as RequestInit)
-    .then(unauthorized)
     .then(responseAndJSON)
+    .then(unauthorized)
     .then(areYouABadStatus);
 
-  function unauthorized(res: Response) {
-    if (res.status === 401) {
+  function unauthorized({ response, json }: { response: Response; json: unknown }) {
+    if (response.status === 401) {
       logout().then(() => window.location.assign(window.location.toString()));
       return Promise.reject({
         type: "BadStatus",
-        message: "your session has expired. Please re-authenticate",
+        message: isErrorInfoData(json)
+          ? json.message
+          : `this is a unhandle error: \n ${JSON.stringify(json, null, 2)}`,
         status: 401,
       });
     }
-    return res;
+    return { response, json };
   }
   async function responseAndJSON(response: Response) {
     const json = await response.json();

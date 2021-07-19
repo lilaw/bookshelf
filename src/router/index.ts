@@ -30,7 +30,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/books/:bookId",
-    component: import(/* webpackChunkName: "book" */ "../views/Book.vue"),
+    component: () => import(/* webpackChunkName: "book" */ "../views/Book.vue"),
   },
   {
     path: "/:pathMatch(.*)*",

@@ -90,7 +90,7 @@ test("logout user if request return 401", async () => {
   jest.spyOn(authMock, "logout");
   authMock.logout.mockImplementation(() => Promise.resolve());
 
-  const testError = { status: 401, message: "fake message" };
+  const testError = { status: 401, message: "your session has expired. Please re-authenticate" };
   server.use(
     rest.get(`${apiURL}/${endpoint}`, async (req, res, ctx) => {
       return res(ctx.status(401), ctx.json(testError));

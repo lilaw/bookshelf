@@ -6,6 +6,7 @@
         :id="`${listItem.bookId}-${i}`"
         class="rate__radio"
         name="rate"
+        aria-label="star"
         @change.prevent="mutate({ id: listItem.id, rating: i })"
         :checked="listItem.rating === i"
       />

@@ -3,6 +3,8 @@
     :content="isError ? error.message : label"
     placement="bottom"
     effect="light"
+    :model-value="isError ? true : null"
+    :manual="isError"
   >
     <div>
       <el-button
@@ -12,9 +14,10 @@
         size="mini"
         circle
         @click.prevent.stop="clickHandler"
+        :disabled="isLoading"
       >
         <!-- optimisticUpdate  -->
-        <i class="el-icon-loading" v-if="isLoading" />
+        <i class="el-icon-loading" aria-label="loading" v-if="isLoading" />
         <i :class="icon" v-else />
         <!-- <i :class="icon"  /> -->
       </el-button>
@@ -23,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 
 export default defineComponent({
   props: {
@@ -33,7 +36,10 @@ export default defineComponent({
     state: { type: Object, required: true },
   },
   setup(props) {
+    const isShow = ref(false);
+
     return {
+      isShow,
       isLoading: props.state.isLoading,
       isError: props.state.isError,
       error: props.state.error,

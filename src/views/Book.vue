@@ -1,6 +1,6 @@
 <template>
   <main class="book">
-    <section class="book-container--head">
+    <section class="book-container--head" v-if="!isError">
       <div class="book__cover-container">
         <img
           :src="book.coverImageUrl"
@@ -12,8 +12,11 @@
         <h2 class="book__title">
           {{ book.title }}
         </h2>
-        <span class="book__author">{{ book.author }}</span>
-        <div class="book__button" v-if="!loadingBook">
+        <div class="book__maker">
+          <span class="book__author">{{ book.author }}</span> |
+          <span>{{ book.publisher }}</span>
+        </div>
+        <div class="book__button" v-if="!isLoading">
           <tooltip-status :bookId="bookId" />
         </div>
         <div class="book__rate" v-if="listItem">
@@ -26,7 +29,7 @@
             >— &nbsp;{{ formatDate(listItem.finishDate) }}</span
           >
         </div>
-        <p class="book__synopsis">{{ book.synopsis.substring(0, 500) }}...</p>
+        <p class="book__synopsis" data-testid="book-synopsis">{{ book.synopsis.slice(0, 500) }}...</p>
       </div>
     </section>
 
@@ -34,6 +37,11 @@
       <label for="book__note" class="book__label">Notes:</label>
       <form-textarea :listItem="listItem" />
     </section>
+    
+    <section class="book-error" v-if="isError">
+      <ErrorMessage :error="error" />
+    </section>
+    
   </main>
 </template>
 
@@ -45,27 +53,29 @@ import Rate from "@/components/Rate.vue";
 import { useBook } from "@/utils/book";
 import { useListItem } from "@/utils/listItems";
 import FormTextarea from "@/components/FormTextarea.vue";
+import {ErrorMessage} from "@/components/lib"
 
 export default defineComponent({
   setup() {
     const route = useRoute();
     const bookId = computed(() => route.params.bookId as string);
-    const { data: book, isLoading: loadingBook } = useBook(bookId.value);
+    const { data: book, isLoading, isError, error } = useBook(bookId.value);
     const listItem = useListItem(bookId.value);
 
-    function formatDate(isostring: string): string {
+    function formatDate(isostring: number): string {
       return Intl.DateTimeFormat(undefined, {
         month: "short",
         year: "2-digit",
       }).format(new Date(isostring));
     }
 
-    return { book, loadingBook, bookId, listItem, formatDate };
+    return { book, isLoading, bookId, listItem, formatDate, isError, error};
   },
   components: {
     TooltipStatus,
     Rate,
     FormTextarea,
+    ErrorMessage,
   },
 });
 </script>
@@ -94,7 +104,7 @@ export default defineComponent({
     display: grid;
     grid-template-columns: 9fr 1fr;
     column-gap: 1rem;
-    row-gap: 0.5rem;
+    row-gap: 1rem;
     width: 100%;
   }
   &__title {
@@ -125,5 +135,12 @@ export default defineComponent({
   /* tail */
   &__label {
   }
+
+}
+.book-error {
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  height: 16rem;
 }
 </style>

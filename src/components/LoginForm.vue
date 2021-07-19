@@ -13,8 +13,14 @@
         ></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button @click="refetch" :disabled="isFetching" native-type="submit" data-testid="submitForm">
-          <i class="el-icon-loading" aria-label="loading" v-if="isFetching" />
+        <el-button
+          @click="refetch"
+          :disabled="isFetching"
+          native-type="submit"
+          data-testid="submitForm"
+        >
+          <i class="el-icon-loading" aria-label="loading" 
+          v-if="isFetching" />
           <span v-else>{{ submitButtonText }}</span>
         </el-button>
         &nbsp;
@@ -30,8 +36,7 @@
 import { defineComponent, PropType, reactive, toRefs } from "vue";
 import { useQuery } from "vue-query";
 import type { user, HttpError, form } from "@/types";
-import {ErrorMessage} from '@/components/lib';
-
+import { ErrorMessage } from "@/components/lib";
 
 export default defineComponent({
   props: {
@@ -62,7 +67,7 @@ export default defineComponent({
     return { ...toRefs(state), isError, isFetching, error, refetch };
   },
   components: {
-    ErrorMessage
+    ErrorMessage,
   },
 });
 </script>

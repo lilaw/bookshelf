@@ -4,7 +4,7 @@ import { useClient } from "@/context/authProvider";
 import { config } from "@/utils/client";
 import { computed, ComputedRef, Ref } from "vue";
 import type { item, HttpError } from "@/types";
-import { isItemLike, isListItemsData, isItemData } from "@/type-guards";
+import { isListItemsData, isItemData } from "@/type-guards";
 import { areYouABadBody } from "@/utils/client";
 
 type updateItemPayload = {
@@ -51,7 +51,9 @@ function useCreateListItem() {
       return client("list-items", {
         data: { bookId },
         method: "POST",
-      }).then(areYouABadBody(isItemLike));
+      })
+        .then(areYouABadBody(isItemData))
+        .then((data) => data.listItem);
     },
     { onSettled: () => queryClient.invalidateQueries("list-items") }
   );
