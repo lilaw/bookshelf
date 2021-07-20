@@ -43,7 +43,7 @@ export default defineComponent({
       data: books,
       error,
       refetch,
-    } = discoverBookSearch(query.value);
+    } = discoverBookSearch(query);
 
     onUnmounted(() => refetchBookSearch());
 

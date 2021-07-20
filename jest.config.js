@@ -22,4 +22,10 @@ module.exports = {
       },
     },
   },
+  collectCoverageFrom: [
+    'src/**/*',
+    '!<rootDir>/node_modules/**/*',
+    '!<rootDir>/src/test/**/*',
+    '!<rootDir>/src/setupTests*',
+  ]
 };

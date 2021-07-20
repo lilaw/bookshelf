@@ -1,5 +1,5 @@
 <template>
-  <section class="book">
+  <section class="book" data-testid="book-row">
     <router-link :to="`/books/${book.id}`" class="book__link">
       <div class="book__wrapper">
         <img
