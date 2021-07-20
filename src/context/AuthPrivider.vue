@@ -13,9 +13,10 @@
   </div>
 </template>
 
+
 <script lang="tsx">
 import { defineComponent } from "vue";
-import { authProvider } from "./authProvider";
+import { authProvider } from ".";
 import { FullPageSpinner, ErrorMessage } from "@/components/lib";
 
 export default defineComponent({

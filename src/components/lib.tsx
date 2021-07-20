@@ -29,8 +29,3 @@ export function ErrorMessage({error, ...props}: {error: HttpError}) {
     </div>
   )
 }
-
-export function test(props: {tt: string}) {
-  debugger
-  return <p>{props.tt}</p>
-}

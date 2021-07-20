@@ -44,7 +44,6 @@ async function create({
   startDate = Date.now(),
   finishDate = null,
 }) {
-  debugger
   const id = hash(`${bookId}${ownerId}`)
   if (listItems[id]) {
     const error = new Error(

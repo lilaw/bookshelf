@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { useAuth } from "@/context/authProvider";
+import { useAuth } from "@/context";
 import AuthenticatedApp from "./Authenticated-app.vue";
 import UnauthenticatedApp from "./Unauthenticated-app.vue";
 

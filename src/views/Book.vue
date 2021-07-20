@@ -20,28 +20,28 @@
           <tooltip-status :bookId="bookId" />
         </div>
         <div class="book__rate" v-if="listItem">
-          <rate :listItem="listItem" />
+          <BookRate :listItem="listItem" />
         </div>
         <div class="book__date" v-if="listItem">
           <i class="el-icon-date"></i>
           <span>{{ formatDate(listItem.startDate) }}</span>
-          <span v-if="listItem.finishDate"
-            >— &nbsp;{{ formatDate(listItem.finishDate) }}</span
-          >
+          <!-- eslint-disable-next-line  -->
+          <span v-if="listItem.finishDate"> - &nbsp;{{ formatDate(listItem.finishDate) }}</span>
         </div>
-        <p class="book__synopsis" data-testid="book-synopsis">{{ book.synopsis.slice(0, 500) }}...</p>
+        <p class="book__synopsis" data-testid="book-synopsis">
+          {{ book.synopsis.slice(0, 500) }}...
+        </p>
       </div>
     </section>
 
     <section class="book-container--tail" v-if="listItem">
       <label for="book__note" class="book__label">Notes:</label>
-      <form-textarea :listItem="listItem" />
+      <BookNoteArea :listItem="listItem" />
     </section>
-    
+
     <section class="book-error" v-if="isError">
       <ErrorMessage :error="error" />
     </section>
-    
   </main>
 </template>
 
@@ -49,11 +49,11 @@
 import { computed, defineComponent } from "vue";
 import { useRoute } from "vue-router";
 import TooltipStatus from "@/components/TooltipStatus.vue";
-import Rate from "@/components/Rate.vue";
+import BookRate from "@/components/BookRate.vue";
 import { useBook } from "@/utils/book";
 import { useListItem } from "@/utils/listItems";
-import FormTextarea from "@/components/FormTextarea.vue";
-import {ErrorMessage} from "@/components/lib"
+import BookNoteArea from "@/components/BookNoteArea.vue";
+import { ErrorMessage } from "@/components/lib";
 
 export default defineComponent({
   setup() {
@@ -69,12 +69,12 @@ export default defineComponent({
       }).format(new Date(isostring));
     }
 
-    return { book, isLoading, bookId, listItem, formatDate, isError, error};
+    return { book, isLoading, bookId, listItem, formatDate, isError, error };
   },
   components: {
     TooltipStatus,
-    Rate,
-    FormTextarea,
+    BookRate,
+    BookNoteArea,
     ErrorMessage,
   },
 });
@@ -135,7 +135,6 @@ export default defineComponent({
   /* tail */
   &__label {
   }
-
 }
 .book-error {
   display: grid;

@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { useAuth } from "@/context/authProvider";
+import { useAuth } from "@/context";
 
 export default defineComponent({
   setup() {

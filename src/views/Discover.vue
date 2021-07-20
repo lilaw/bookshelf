@@ -12,7 +12,6 @@
     </el-button>
   </form>
   <div>
-    <test tt="df"/>
     <p>Welcome to the discover page.</p>
     <p>Here, let me load a few books for you...</p>
   </div>
@@ -33,7 +32,6 @@
 import { defineComponent, onUnmounted, ref } from "vue";
 import BookRow from "@/components/BookRow.vue";
 import { discoverBookSearch, refetchBookSearch } from "@/utils/book";
-import {test} from "@/components/lib.tsx"
 
 export default defineComponent({
   setup() {
@@ -61,7 +59,6 @@ export default defineComponent({
   },
   components: {
     BookRow,
-    test
   },
 });
 </script>

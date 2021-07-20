@@ -34,7 +34,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import LoginForm from "@/components/LoginForm.vue";
-import { useAuth } from "@/context/authProvider";
+import { useAuth } from "@/context";
 import AppModal from "@/components/AppModal.vue";
 
 export default defineComponent({
