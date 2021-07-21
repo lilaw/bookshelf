@@ -1,24 +1,11 @@
-# books
+# bookshelf
+rebuild the bookshelf app using vue3 and typescript
 
-## Project setup
-```
-yarn install
-```
+## [demo](https://github.com/lilaw/bookshelf)
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
 
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### note of react query
+`TData` data type return from sever
+`TError` value type from promise reject
+`TVariables` variable of mutation function
+`TContext` value return from onMutate

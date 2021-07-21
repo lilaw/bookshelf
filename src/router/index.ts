@@ -16,11 +16,8 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/finished",
     name: "finished",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/Finished.vue"),
+      import(/* webpackChunkName: "finished" */ "../views/Finished.vue"),
   },
   {
     path: "/discover",
@@ -36,12 +33,14 @@ const routes: Array<RouteRecordRaw> = [
     path: "/:pathMatch(.*)*",
     name: "404",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+      import(/* webpackChunkName: "notFound" */ "../views/notFound.vue"),
   },
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL || process.env.VUE_APP_BASE_URL),
+  history: createWebHistory(
+    process.env.BASE_URL || process.env.VUE_APP_BASE_URL
+  ),
   routes,
 });
 

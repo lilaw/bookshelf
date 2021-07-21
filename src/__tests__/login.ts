@@ -1,10 +1,8 @@
 import AppIndex from "../Index.vue";
 import { buildUser } from "../test/generate";
-import { server } from "../test/server";
 import {
   render,
   screen,
-  waitFor,
   within,
   waitForElementToBeRemoved,
 } from "@testing-library/vue";
@@ -12,8 +10,6 @@ import router from "../router";
 import store from "../store/index";
 import ElementPlus from "element-plus";
 import userEvent from "@testing-library/user-event";
-import { ErrorMessage } from "../components/lib";
-import { flushPromises } from "@vue/test-utils";
 import * as authProvider from "../utils/auth-provider";
 
 beforeEach(async () => {
@@ -79,12 +75,10 @@ test("show error message if something go wrong", async () => {
   await userEvent.type(loginModal.getByTestId("password"), user.password);
   await userEvent.click(loginModal.getByTestId("submitForm"));
 
-  await waitForElementToBeRemoved(
-    () => [
-      ...screen.queryAllByLabelText(/loading/i),
-      ...screen.queryAllByText(/loading/i),
-    ],
-  );
+  await waitForElementToBeRemoved(() => [
+    ...screen.queryAllByLabelText(/loading/i),
+    ...screen.queryAllByText(/loading/i),
+  ]);
 
   expect(screen.queryByRole("alert")).toBeTruthy();
 });

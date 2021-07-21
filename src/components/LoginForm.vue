@@ -19,8 +19,7 @@
           native-type="submit"
           data-testid="submitForm"
         >
-          <i class="el-icon-loading" aria-label="loading" 
-          v-if="isFetching" />
+          <i class="el-icon-loading" aria-label="loading" v-if="isFetching" />
           <span v-else>{{ submitButtonText }}</span>
         </el-button>
         &nbsp;

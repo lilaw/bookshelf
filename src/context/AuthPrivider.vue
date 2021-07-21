@@ -13,7 +13,6 @@
   </div>
 </template>
 
-
 <script lang="tsx">
 import { defineComponent } from "vue";
 import { authProvider } from ".";

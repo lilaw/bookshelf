@@ -13,7 +13,7 @@ import {
   config,
 } from "@/utils/client";
 import type { HttpError, item, user, form } from "@/types";
-import { isBootstrapData, isUserLike, isUserData } from "@/type-guards";
+import { isBootstrapData, isUserData } from "@/type-guards";
 
 /**
  * type for provider ********************************************

@@ -5,8 +5,8 @@ import {
 } from "../test/app-test-utils";
 import AppIndex from "../Index.vue";
 import { server, rest } from "../test/server";
-import { buildListItem, buildBook } from "../test/generate";
-import { waitFor, screen } from "@testing-library/vue";
+import { buildBook } from "../test/generate";
+import { screen } from "@testing-library/vue";
 import * as booksDB from "../test/data/books";
 import userEvent from "@testing-library/user-event";
 

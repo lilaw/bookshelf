@@ -1,6 +1,5 @@
 import faker from "faker";
-import { book, item } from "@/types";
-import type { book as Book, user } from "@/types";
+import type { book, user, item } from "@/types";
 
 type serverUser = {
   id: string;

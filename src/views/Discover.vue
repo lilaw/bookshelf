@@ -7,7 +7,9 @@
       @click="refetch"
       :disabled="isFetching"
     >
-      <span v-if="isFetching"><i class="el-icon-loading" aria-label="loading"></i></span>
+      <span v-if="isFetching"
+        ><i class="el-icon-loading" aria-label="loading"></i
+      ></span>
       <span v-else><i class="el-icon-search"></i> Search</span>
     </el-button>
   </form>

@@ -17,8 +17,8 @@ const apiURL = process.env.VUE_APP_BOOK_APP_API_URL;
 async function buildReadingBook() {
   const user = await loginAsUser();
   const book = await booksDB.create(buildBook());
-  const listItem = await listItemsDB.create(buildListItem({ book }, user))
-  return {user, book, listItem}
+  const listItem = await listItemsDB.create(buildListItem({ book }, user));
+  return { user, book, listItem };
 }
 
 async function renderBookView(book?: Book, user?: user) {
@@ -77,7 +77,7 @@ test("can add book to  reading list", async () => {
 
 test("can remove book form reading list", async () => {
   // add book to reading list
-  const {user, book} = await buildReadingBook()
+  const { user, book } = await buildReadingBook();
 
   await renderBookView(book, user);
 
@@ -93,7 +93,7 @@ test("can remove book form reading list", async () => {
 
 test("can mark list as read", async () => {
   // add book to reading list
-  const {user, book} = await buildReadingBook()
+  const { user, book } = await buildReadingBook();
   await renderBookView(book, user);
 
   const removeFromListButton = screen.getByRole("button", {
@@ -109,7 +109,7 @@ test("can mark list as read", async () => {
 test("can edit note", async () => {
   jest.useFakeTimers();
   const fakeNote = faker.lorem.sentence();
-  const {user, book, listItem} = await buildReadingBook()
+  const { user, book, listItem } = await buildReadingBook();
   await renderBookView(book, user);
 
   const note = screen.getByRole("textbox");
@@ -148,7 +148,7 @@ test("note update failures are displaye", async () => {
     })
   );
 
-  const {user, book} = await buildReadingBook()
+  const { user, book } = await buildReadingBook();
   await renderBookView(book, user);
 
   const note = screen.getByRole("textbox");

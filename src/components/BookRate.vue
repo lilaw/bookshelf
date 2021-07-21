@@ -50,6 +50,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .rate {
   position: relative;
+  display: inline-block;
 }
 .rate__radio {
   position: absolute;

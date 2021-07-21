@@ -5,12 +5,11 @@ module.exports = {
   },
   overrides: [
     /**
-     * tests file
+     * App file
      */
     {
-      
       files: ["*.ts", "*.tsx", "*.vue", "*.js"],
-
+      excludedFiles: ["jest.config.js"],
       extends: [
         "plugin:vue/vue3-essential",
         "eslint:recommended",
@@ -21,10 +20,10 @@ module.exports = {
       parserOptions: {
         ecmaVersion: 2020,
       },
-  rules: {
-    "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
-    "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
-  },
+      rules: {
+        "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
+        "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
+      },
     },
     /**
      * tests file

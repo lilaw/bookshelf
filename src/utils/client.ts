@@ -30,7 +30,13 @@ function client(
     .then(unauthorized)
     .then(areYouABadStatus);
 
-  function unauthorized({ response, json }: { response: Response; json: unknown }) {
+  function unauthorized({
+    response,
+    json,
+  }: {
+    response: Response;
+    json: unknown;
+  }) {
     if (response.status === 401) {
       logout().then(() => window.location.assign(window.location.toString()));
       return Promise.reject({
