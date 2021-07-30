@@ -12,7 +12,7 @@ import ElementPlus from "element-plus";
 import userEvent from "@testing-library/user-event";
 import * as authProvider from "../utils/auth-provider";
 
-beforeEach(async () => {
+async function renderLoginScreen() {
   router.push("/list");
   await router.isReady();
 
@@ -21,15 +21,16 @@ beforeEach(async () => {
       plugins: [router, store, ElementPlus],
     },
   });
-  await waitForElementToBeRemoved(() => [
-    ...screen.queryAllByLabelText(/loading/i),
-    ...screen.queryAllByText(/loading/i),
-  ]);
+}
+
+afterEach(() => {
+  localStorage.removeItem("authState");
 });
 
 test("user can login, logout, register", async () => {
   jest.spyOn(authProvider, "logout");
   const user = buildUser();
+  await renderLoginScreen()
 
   expect(screen.queryByRole("heading", { name: "Bookshelf" })).toBeTruthy();
 
@@ -38,7 +39,7 @@ test("user can login, logout, register", async () => {
   const inModal = within(screen.getByRole("dialog"));
   await userEvent.type(inModal.getByTestId("username"), user.username);
   await userEvent.type(inModal.getByTestId("password"), user.password);
-  await userEvent.click(inModal.getByTestId("submitForm"));
+  await userEvent.click(inModal.getByTestId("submitButton"));
 
   await waitForElementToBeRemoved(() => [
     ...screen.queryAllByLabelText(/loading/i),
@@ -57,7 +58,7 @@ test("user can login, logout, register", async () => {
   const loginModal = within(screen.getByRole("dialog"));
   await userEvent.type(loginModal.getByTestId("username"), user.username);
   await userEvent.type(loginModal.getByTestId("password"), user.password);
-  await userEvent.click(loginModal.getByTestId("submitForm"));
+  await userEvent.click(loginModal.getByTestId("submitButton"));
 
   await waitForElementToBeRemoved(() => [
     ...screen.queryAllByLabelText(/loading/i),
@@ -65,20 +66,26 @@ test("user can login, logout, register", async () => {
   ]);
   expect(screen.queryByText(user.username)).toBeTruthy();
   expect(screen.queryByRole("button", { name: /logout/i })).toBeTruthy();
+  localStorage.removeItem("authState");
 });
 
 test("show error message if something go wrong", async () => {
   const user = buildUser();
+  console.log(localStorage)
+  await renderLoginScreen()
+
   await userEvent.click(screen.getByRole("button", { name: "login" }));
   const loginModal = within(screen.getByRole("dialog"));
   await userEvent.type(loginModal.getByTestId("username"), user.username);
   await userEvent.type(loginModal.getByTestId("password"), user.password);
-  await userEvent.click(loginModal.getByTestId("submitForm"));
+  await userEvent.click(loginModal.getByTestId("submitButton"));
 
   await waitForElementToBeRemoved(() => [
     ...screen.queryAllByLabelText(/loading/i),
     ...screen.queryAllByText(/loading/i),
   ]);
 
-  expect(screen.queryByRole("alert")).toBeTruthy();
+  expect(screen.getByRole("alert").textContent).toMatchInlineSnapshot(
+    `"There was an error:   Invalid username or password"`
+  );
 });

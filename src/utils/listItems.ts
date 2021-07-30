@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { useMutation, useQuery, useQueryClient } from "vue-query";
-import { useClient } from "@/context";
-import { config } from "@/utils/client";
+import type { config } from "@/utils/client";
+import { useClient } from "@/utils/client";
 import { computed, ComputedRef, Ref } from "vue";
 import type { item, HttpError } from "@/types";
 import { isListItemsData, isItemData } from "@/type-guards";

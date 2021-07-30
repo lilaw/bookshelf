@@ -12,6 +12,8 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@xstate/inspect": "^0.4.1",
+    "@xstate/vue": "^0.8.0",
     "core-js": "^3.6.5",
     "debounce-fn": "^5.0.0",
     "dotenv": "^10.0.0",
@@ -23,7 +25,8 @@
     "vue-query": "^1.5.1",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0",
-    "whatwg-fetch": "^3.6.2"
+    "whatwg-fetch": "^3.6.2",
+    "xstate": "^4.23.1"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.14.5",

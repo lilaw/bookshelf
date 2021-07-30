@@ -14,13 +14,16 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { useAuth } from "@/context";
+import { useAuthActor } from "@/machines";
 
 export default defineComponent({
   setup() {
-    const { user, logout } = useAuth();
+    const { authState, sendAuth } = useAuthActor();
+    function logout() {
+      sendAuth({ type: "LOGOUT" });
+    }
 
-    return { user, logout };
+    return { user: authState.value.context.user, logout };
   },
 });
 </script>

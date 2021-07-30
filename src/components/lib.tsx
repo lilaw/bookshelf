@@ -14,7 +14,8 @@ export const FullPageSpinner = () => {
   );
 };
 
-export function ErrorMessage({ error, ...props }: { error: HttpError }) {
+export function ErrorMessage({ error, ...props }: { error: HttpError | string}) {
+  const message = typeof error === "string" ? error : error.message;
   return (
     <div role="alert" style={[{ color: "ef5350" }]} {...props}>
       <span>There was an error: </span>
@@ -22,7 +23,7 @@ export function ErrorMessage({ error, ...props }: { error: HttpError }) {
         style={[{ whiteSpace: "break-spaces", margin: "0", marginBottom: -5 }]}
       >
         {"  "}
-        {error.message}
+        {message}
       </pre>
     </div>
   );

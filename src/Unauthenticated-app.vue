@@ -34,19 +34,25 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import LoginForm from "@/components/LoginForm.vue";
-import { useAuth } from "@/context";
 import AppModal from "@/components/AppModal.vue";
+import { useAuthActor } from "@/machines";
 
 export default defineComponent({
   name: "Home",
   setup() {
-    const { login, register } = useAuth();
+    const { sendAuth } = useAuthActor();
+    function login(form: any) {
+      sendAuth({ type: "LOGIN", form });
+    }
+    function register(form: any) {
+      sendAuth({ type: "SIGNUP", form });
+    }
+
     return {
       login,
       register,
     };
   },
-  methods: {},
   components: {
     LoginForm,
     AppModal,

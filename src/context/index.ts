@@ -64,6 +64,7 @@ export function authProvider() {
   const result = useQuery<user | undefined, HttpError>("user", bootstrap, {
     staleTime: Infinity,
     retry: false,
+    enabled: false
   });
   const {
     status,

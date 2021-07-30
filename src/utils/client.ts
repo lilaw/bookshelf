@@ -1,5 +1,6 @@
 import { logout } from "@/utils/auth-provider";
 import { isErrorInfoData } from "@/type-guards";
+import { useAuthActor } from "@/machines";
 
 const apiURL = "https://bookshelf.jk/api";
 
@@ -84,4 +85,11 @@ function areYouABadBody<T>(check: (x: any) => x is T) {
   };
 }
 
-export { client, config, areYouABadBody, areYouABadStatus };
+function useClient() {
+  const { authState } = useAuthActor();
+  const token = authState.value.context.user?.token;
+  return function withUserClient(endpoint: string, config?: config) {
+    return client(endpoint, { token, ...config });
+  };
+}
+export { client, config, areYouABadBody, areYouABadStatus, useClient };

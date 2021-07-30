@@ -1,25 +1,28 @@
 <template>
   <div class="layout">
-    <authenticated-app v-if="user" />
+    <authenticated-app v-if="isLoggedIn" />
     <unauthenticated-app v-else />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { useAuth } from "@/context";
+import { defineComponent, watch, computed } from "vue";
 import AuthenticatedApp from "./Authenticated-app.vue";
 import UnauthenticatedApp from "./Unauthenticated-app.vue";
+import { useAuthActor } from "@/machines";
 
 export default defineComponent({
+  setup() {
+    const { authState } = useAuthActor();
+    const isLoggedIn = computed<boolean>(() =>
+      authState.value.matches("authorized")
+    );
+
+    return { isLoggedIn };
+  },
   components: {
     AuthenticatedApp,
     UnauthenticatedApp,
-  },
-  setup() {
-    const { user } = useAuth();
-
-    return { user };
   },
 });
 </script>

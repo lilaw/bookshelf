@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { useClient } from "@/context";
+import { useClient } from "@/utils/client";
 import { useQuery, useQueryClient } from "vue-query";
 import bookPlaceholderSvg from "@/assets/book-placeholder.svg";
 import { isBookData, isBooksData } from "@/type-guards";
