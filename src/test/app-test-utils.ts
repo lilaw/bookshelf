@@ -18,7 +18,7 @@ export async function loginAsUser() {
   await usersDB.create(user);
   const authUser = await usersDB.authenticate(user);
   window.localStorage.setItem(auth.localStorageKey, authUser.token);
-  return authUser;
+  return { ...user, ...authUser };
 }
 
 export async function waitForLoadingToFinish(): Promise<void> {

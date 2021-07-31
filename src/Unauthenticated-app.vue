@@ -2,12 +2,12 @@
   <main class="container">
     <h1 class="hero">Bookshelf</h1>
     <section class="control">
-      <app-modal>
+      <app-modal :closeAction="clearMessage">
         <template #modal-openButton="{ openModal }">
           <el-button @click="openModal">register</el-button>
         </template>
         <template #modal-title>
-          <h3>Register</h3>
+          <h3 data-testid="registerHeading">Register</h3>
         </template>
         <template #modal-content>
           <login-form :handleSubmit="register" submitButtonText="register">
@@ -15,12 +15,12 @@
         </template>
       </app-modal>
 
-      <app-modal>
+      <app-modal :closeAction="clearMessage">
         <template #modal-openButton="{ openModal }">
           <el-button @click="openModal">login</el-button>
         </template>
         <template #modal-title>
-          <h3>login</h3>
+          <h3 data-testid="loginHeading">login</h3>
         </template>
         <template #modal-content>
           <login-form :handleSubmit="login" submitButtonText="login">
@@ -41,6 +41,9 @@ export default defineComponent({
   name: "Home",
   setup() {
     const { sendAuth } = useAuthActor();
+    function clearMessage() {
+      sendAuth("CLEAR")
+    }
     function login(form: any) {
       sendAuth({ type: "LOGIN", form });
     }
@@ -51,6 +54,7 @@ export default defineComponent({
     return {
       login,
       register,
+      clearMessage
     };
   },
   components: {

@@ -1,14 +1,12 @@
 <script lang="ts">
-import { defineComponent, ref } from "vue";
-import { useAuthActor } from "@/machines";
+import { defineComponent, PropType, ref } from "vue";
 
 export default defineComponent({
+  props: {
+    closeAction: { type: Function as PropType<() => void> },
+  },
   setup() {
     const open = ref(false);
-    const { sendAuth } = useAuthActor();
-    function clearMessage() {
-      sendAuth("CLEAR")
-    }
 
     function openModal() {
       open.value = true;
@@ -18,7 +16,7 @@ export default defineComponent({
       open.value = false;
     }
 
-    return { open, openModal, closeModal, clearMessage };
+    return { open, openModal, closeModal, };
   },
 });
 </script>
@@ -26,7 +24,13 @@ export default defineComponent({
 <template>
   <div>
     <slot name="modal-openButton" :openModal="openModal" />
-    <el-dialog v-model="open" width="30%" title="dialog" @close="clearMessage">
+    <el-dialog
+      v-model="open"
+      width="30%"
+      title="dialog"
+      @close="closeAction"
+      :destroy-on-close="true"
+    >
       <template #title>
         <section class="modal__title">
           <slot name="modal-title">

@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@xstate/inspect": "^0.4.1",
+    "@xstate/test": "^0.4.2",
     "@xstate/vue": "^0.8.0",
     "core-js": "^3.6.5",
     "debounce-fn": "^5.0.0",
