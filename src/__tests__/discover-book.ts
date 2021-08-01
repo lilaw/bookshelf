@@ -15,7 +15,7 @@ const apiURL = process.env.VUE_APP_BOOK_APP_API_URL;
 async function renderDiscover() {
   const user = await loginAsUser();
   const result = await render(AppIndex, { path: `/discover` });
-  await waitForLoadingToFinish();
+  // await waitForLoadingToFinish();
 
   return { user, ...result };
 }

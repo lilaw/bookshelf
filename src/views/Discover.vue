@@ -1,10 +1,10 @@
 <template>
-  <form class="search" @submit.prevent="refetch">
+  <form class="search" @submit.prevent="searchBooks">
     <el-input placeholder="search books" v-model="query"></el-input>
     <el-button
       type="primary"
       class="search__btn"
-      @click="refetch"
+      native-type="submit"
       :disabled="isFetching"
     >
       <span v-if="isFetching"
@@ -22,7 +22,7 @@
       <h3>There was an error:</h3>
       <pre>{{ error.message }}</pre>
     </section>
-    <ul class="books">
+    <ul class="books" >
       <li v-for="book in books" :key="book.id">
         <book-row :book="book" />
       </li>
@@ -31,32 +31,39 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onUnmounted, ref } from "vue";
+import { defineComponent, onUnmounted, ref, watch , computed} from "vue";
 import BookRow from "@/components/BookRow.vue";
-import { discoverBookSearch, refetchBookSearch } from "@/utils/book";
+import { refetchBookSearch } from "@/utils/book";
+import { useMachine } from "@xstate/vue";
+import { searchMachine } from "@/machines/searchMachine";
 
 export default defineComponent({
   setup() {
     const query = ref("");
-    const {
-      isLoading,
-      isError,
-      isFetching,
-      data: books,
-      error,
-      refetch,
-    } = discoverBookSearch(query);
+    const { state: searchState, send: sendSearch } = useMachine(searchMachine);
+    const isFetching = computed(() => searchState.value.matches("searching"))
+    const isError = computed(() => searchState.value.matches("failure"))
+    const error = computed(() => searchState.value.context.message)
+    const books = computed(() => searchState.value.context.books)
+    watch(query, (query) => {
+      sendSearch({ type: "UPDATE-QUERY", query });
+      console.log(searchState);
+    });
+
+    function searchBooks() {
+      sendSearch({ type: "SEARCH" });
+    }
 
     onUnmounted(() => refetchBookSearch());
 
     return {
       query,
-      isLoading,
       isError,
       isFetching,
       books,
       error,
-      refetch,
+      status,
+      searchBooks
     };
   },
   components: {
