@@ -22,16 +22,16 @@
       <h3>There was an error:</h3>
       <pre>{{ error.message }}</pre>
     </section>
-    <ul class="books" >
-      <li v-for="book in books" :key="book.id">
-        <book-row :book="book" />
+    <ul class="books" v-if="!isFetching">
+      <li v-for="bookRef in booksRef" :key="bookRef.id">
+        <BookRow :bookRef="bookRef" />
       </li>
     </ul>
   </main>
 </template>
 
 <script lang="ts">
-import { defineComponent, onUnmounted, ref, watch , computed} from "vue";
+import { defineComponent, onUnmounted, ref, watch , computed, } from "vue";
 import BookRow from "@/components/BookRow.vue";
 import { refetchBookSearch } from "@/utils/book";
 import { useMachine } from "@xstate/vue";
@@ -45,11 +45,18 @@ export default defineComponent({
     const isError = computed(() => searchState.value.matches("failure"))
     const error = computed(() => searchState.value.context.message)
     const books = computed(() => searchState.value.context.books)
+    const booksRef = computed(() => searchState.value.context.booksRef)
     watch(query, (query) => {
       sendSearch({ type: "UPDATE-QUERY", query });
-      console.log(searchState);
+      console.log({searchState, booksRef});
     });
 
+    watch(booksRef, (query) => {
+      console.log({searchState, booksRef});
+    });
+    watch(booksRef, (query) => {
+      console.log({searchState, booksRef}, 11111111111);
+    });
     function searchBooks() {
       sendSearch({ type: "SEARCH" });
     }
@@ -63,7 +70,8 @@ export default defineComponent({
       books,
       error,
       status,
-      searchBooks
+      searchBooks,
+      booksRef
     };
   },
   components: {

@@ -14,21 +14,34 @@
         </div>
       </div>
     </router-link>
-    <TooltipStatus :bookId="book.id" />
+    <TooltipStatus :bookService="bookRef" />
   </section>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { computed, defineComponent, PropType } from "vue";
 import TooltipStatus from "@/components/TooltipStatus.vue";
-import type { book } from "@/types";
+import { useActor } from "@xstate/vue";
+import type { Interpreter} from "xstate";
+import type {
+  BookMachineContext,
+  BookMachineEvents,
+} from "@/machines/bookMachine";
 
 export default defineComponent({
   props: {
-    book: Object as PropType<book>,
+    bookRef: {
+      type: Object as PropType<
+        Interpreter<BookMachineContext, any, BookMachineEvents>
+      >,
+      required: true,
+    },
   },
-  setup() {
-    return {};
+  setup(props) {
+    const { state: bookState, } = useActor(props.bookRef);
+    const book = computed(() => bookState.value.context?.book);
+
+    return { book };
   },
   components: {
     TooltipStatus,

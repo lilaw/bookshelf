@@ -14,29 +14,43 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from "vue";
-import { useUdateListItem } from "@/utils/listItems";
+import { defineComponent, PropType, ref, computed } from "vue";
 import type { item } from "@/types";
 import debounceFn from "debounce-fn";
 import { ErrorMessage } from "@/components/lib";
+import { useActor } from "@xstate/vue";
+import type { DataMachineEvents } from "@/machines/dataMachine";
+import type { ActorRef } from "xstate";
 
 export default defineComponent({
   props: {
-    listItem: { type: Object as PropType<item>, required: true },
+    noteRef: {
+      type: Object as PropType<ActorRef<DataMachineEvents>>,
+      required: true,
+    },
+    listItem: {
+      type: Object as PropType<item>,
+      required: true,
+    },
   },
   setup(props) {
     const noteValue = ref(props.listItem.notes);
-    const { mutate, isError, error, isLoading } = useUdateListItem();
+    const { state: noteState, send: sendNote } = useActor(props.noteRef);
 
-    type DebounceMutate = (payload: { id: string; notes: string }) => void;
-    const debounceMutate: DebounceMutate = debounceFn(mutate, { wait: 3000 });
+    type DebounceMutate = (payload: { type: string; notes: string }) => void;
+    const debounceMutate: DebounceMutate = debounceFn(
+      (notes) => sendNote(notes),
+      { wait: 3000 }
+    );
     function updateNoteChange() {
-      debounceMutate({
-        id: props.listItem.id,
-        notes: noteValue.value,
-      });
+      debounceMutate({ type: "CLICK", notes: noteValue.value });
     }
 
+    const { isError, error, isLoading } = {
+      isLoading: computed(() => noteState.value.matches("loading")),
+      isError: computed(() => noteState.value.matches("failure")),
+      error: computed(() => noteState.value.context?.message),
+    };
     return { isError, error, isLoading, noteValue, updateNoteChange };
   },
   components: {

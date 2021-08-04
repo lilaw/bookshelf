@@ -1,6 +1,6 @@
 <template>
   <el-tooltip
-    :content="isError ? error.message : label"
+    :content="isError ? error : label"
     placement="bottom"
     effect="light"
     :model-value="isError ? true : null"
@@ -10,7 +10,7 @@
       <el-button
         class="button"
         native-type="button"
-        :aria-label="isError ? error.message : label"
+        :aria-label="isError ? error : label"
         size="mini"
         circle
         @click.prevent.stop="clickHandler"
@@ -36,10 +36,8 @@ export default defineComponent({
     state: { type: Object, required: true },
   },
   setup(props) {
-    const isShow = ref(false);
 
     return {
-      isShow,
       isLoading: props.state.isLoading,
       isError: props.state.isError,
       error: props.state.error,

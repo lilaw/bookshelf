@@ -1,72 +1,109 @@
 <template>
-  <div class="tooltip">
+  <div class="tooltip" v-if="showBtns">
     <tooltip-button
       class="button"
       icon="el-icon-close"
       label="Remove from list"
-      :state="remove"
-      :clickHandler="() => remove.mutate({ id: item.id })"
-      v-if="item"
+      :state="removeState"
+      :clickHandler="remove"
+      v-if="showRemoveBtn"
     />
     <tooltip-button
       class="button"
       icon="el-icon-circle-plus"
       label="Add to list"
-      :state="create"
-      :clickHandler="() => create.mutate({ bookId: bookId })"
-      v-else
+      :state="createState"
+      :clickHandler="create"
+      v-if="showAddBtn"
     />
-    <div class="update" v-if="item">
-      <tooltip-button
-        class="button"
-        icon="el-icon-notebook-1"
-        label="Mark as unread"
-        :state="update"
-        :clickHandler="() => update.mutate({ id: item.id, finishDate: null })"
-        v-if="item.finishDate"
-      >
-      </tooltip-button>
-      <tooltip-button
-        class="button"
-        icon="el-icon-check"
-        label="MarK as read"
-        :state="update"
-        :clickHandler="
-          () => update.mutate({ id: item.id, finishDate: Date.now() })
-        "
-        v-else
-      >
-      </tooltip-button>
-    </div>
+    <tooltip-button
+      class="button"
+      icon="el-icon-notebook-1"
+      label="Mark as unfinish"
+      :state="unfinishState"
+      :clickHandler="unfinish"
+      v-if="showUnfinBtn"
+    >
+    </tooltip-button>
+    <tooltip-button
+      class="button"
+      icon="el-icon-check"
+      label="MarK as finish"
+      :state="finishState"
+      :clickHandler="finish"
+      v-if="showFinBtn"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent, PropType, watch } from "vue";
 import TooltipButton from "@/components/TooltipButton.vue";
-import {
-  useListItem,
-  useUdateListItem,
-  useCreateListItem,
-  useRemoveListItem,
-} from "@/utils/listItems";
+import { useActor } from "@xstate/vue";
+import type { Interpreter, ActorRef } from "xstate";
+import type {
+  BookMachineContext,
+  BookMachineEvents,
+  DataMachineEvents,
+} from "@/machines/bookMachine";
 
 export default defineComponent({
   props: {
-    bookId: { type: String, required: true },
+    bookService: {
+      type: Object as PropType<
+        Interpreter<BookMachineContext, any, BookMachineEvents>
+      >,
+      required: true,
+    },
   },
   setup(props) {
-    const item = useListItem(props.bookId);
+    const { state: bookState } = useActor(props.bookService);
+    const buttonRefs = bookState.value.context
+      ?.buttons as ActorRef<DataMachineEvents>[];
+    const buttons = buttonRefs.map((ref) => useActor(ref));
 
-    const update = useUdateListItem();
-    const create = useCreateListItem();
-    const remove = useRemoveListItem();
+    const [createState, removeState, finishState, unfinishState] = buttons.map(
+      (btn) => ({
+        isLoading: computed(() => btn.state.value.matches("loading")),
+        isError: computed(() => btn.state.value.matches("failure")),
+        error: computed(() => btn.state.value.context?.message),
+      })
+    );
 
+    // event function
+    // const finish = () => finishBtn.send({ type: "CLICK" });
+    const [create, remove, finish, unfinish] = buttons.map(
+      (btn) => () => btn.send({ type: "CLICK" })
+    );
+
+    // when to show
+    const showAddBtn = computed(() =>
+      ["success.unread"].some(bookState.value.matches)
+    );
+    const showRemoveBtn = computed(() =>
+      ["success.read"].some(bookState.value.matches)
+    );
+    const showFinBtn = computed(() =>
+      ["success.read.duration.unfinish"].some(bookState.value.matches)
+    );
+    const showUnfinBtn = computed(() =>
+      ["success.read.duration.finish"].some(bookState.value.matches)
+    );
+    const showBtns = computed(() => bookState.value.matches("success"));
     return {
-      item,
-      update,
+      showAddBtn,
+      showRemoveBtn,
+      showFinBtn,
+      showUnfinBtn,
+      showBtns,
+      createState,
       create,
+      removeState,
       remove,
+      finish,
+      finishState,
+      unfinish,
+      unfinishState,
     };
   },
   components: {
@@ -83,7 +120,5 @@ export default defineComponent({
   align-items: center;
   margin-left: -15px;
   height: 100%;
-}
-.button {
 }
 </style>

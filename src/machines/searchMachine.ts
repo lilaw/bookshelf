@@ -1,10 +1,17 @@
-import { createMachine, assign, interpret, State } from "xstate";
+import {
+  createMachine,
+  assign,
+  spawn,
+  ActorRef,
+} from "xstate";
 import type { HttpError, book } from "@/types";
 import bookPlaceholderSvg from "@/assets/book-placeholder.svg";
 import { queryClient } from "@/context/QueryClient";
 import { bookSearch } from "@/utils/book";
+import { bookMachine } from "./bookMachine";
+import type {BookMachineContext, BookMachineEvents} from "./bookMachine"
 
-export type SearchjMachineEvents =
+export type SearchMachineEvents =
   | { type: "SEARCH" }
   | { type: "FAILURE"; message: string }
   | { type: "SUCCESS"; books: book[] }
@@ -14,6 +21,7 @@ export interface SearchMachineContext {
   message?: string;
   books?: book[];
   query: string;
+  booksRef: ActorRef<BookMachineEvents, BookMachineContext>[];
 }
 
 export type SearchMachineState =
@@ -35,7 +43,7 @@ export type SearchMachineState =
     };
 export const searchMachine = createMachine<
   SearchMachineContext,
-  SearchjMachineEvents,
+  SearchMachineEvents,
   SearchMachineState
 >(
   {
@@ -43,9 +51,10 @@ export const searchMachine = createMachine<
     context: {
       books: undefined,
       message: undefined,
+      booksRef: [],
       query: "",
     },
-    initial: "idle",
+    initial: "searching",
     states: {
       idle: {
         entry: ["setDefaultBooks"],
@@ -99,7 +108,6 @@ export const searchMachine = createMachine<
   {
     services: {
       searchBooks(context, event) {
-        console.log(7777777777);
         return bookSearch(context.query);
       },
     },
@@ -126,8 +134,13 @@ export const searchMachine = createMachine<
       }),
       setBooks: assign({
         books: (context, event: any) => {
-          console.log({ context, event });
           return event.data;
+        },
+        booksRef: (context, event: any) => {
+          const booksRef = event.data.map((book: book) =>
+            spawn(bookMachine({book, initial: "listItem"}), book.id)
+          );
+          return booksRef;
         },
       }),
       onError: assign({

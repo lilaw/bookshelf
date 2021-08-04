@@ -7,7 +7,7 @@
         class="rate__radio"
         name="rate"
         aria-label="star"
-        @change.prevent="mutate({ id: listItem.id, rating: i })"
+        @change.prevent="rateBook({ id: listItem.id, rating: i })"
         :checked="listItem.rating === i"
       />
       <label :for="`${listItem.bookId}-${i}`" class="rate__label">
@@ -15,7 +15,7 @@
           :class="{
             'el-icon-star-on': true,
             // eslint-disable-next-line
-            'rate__icon': true,
+            rate__icon: true,
             'rate__icon--unrate': !isRating,
             'rate__icon--rated': isRating,
           }"
@@ -28,21 +28,36 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue";
-import { useUdateListItem } from "@/utils/listItems";
+import { useActor } from "@xstate/vue";
+import { DataMachineEvents } from "@/machines/dataMachine";
+import type { ActorRef } from "xstate";
 import type { item } from "@/types";
 
 export default defineComponent({
   props: {
-    listItem: { type: Object as PropType<item>, required: true },
+    starRef: {
+      type: Object as PropType<ActorRef<DataMachineEvents>>,
+      required: true,
+    },
+    listItem: {
+      type: Object as PropType<item>,
+      required: true,
+    },
   },
   setup(props) {
     const numberOfStar = 5;
+    const { state: starState, send: sendStar } = useActor(props.starRef);
     const isRating = computed(() =>
       props.listItem.rating == -1 ? false : true
     );
-    const { mutate, isError, error } = useUdateListItem();
+    const { isError, error } = {
+      isError: computed(() => starState.value.matches("failure")),
+      error: computed(() => starState.value.context?.message),
+    };
+    const rateBook = (data: { id: string; rating: number }) =>
+      sendStar({ type: "CLICK", data });
 
-    return { numberOfStar, isRating, mutate, isError, error };
+    return { numberOfStar, isRating, rateBook, isError, error };
   },
 });
 </script>

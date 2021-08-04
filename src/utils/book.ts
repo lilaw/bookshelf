@@ -21,6 +21,19 @@ function useBook(bookId: string) {
   );
   return data;
 }
+export function performBook(bookId: string) {
+  const client = useClient();
+
+  const data = queryClient.fetchQuery<book, HttpError>(
+    ["book", { bookId }],
+    () =>
+      client(`books/${bookId}`)
+        .then(areYouABadBody(isBookData))
+        .then((data) => data.book),
+    // { initialData: loadingBook }
+  );
+  return data;
+}
 
 const bookSearchFunction = function bookSearchFunction(query: string) {
   const client = useClient();
