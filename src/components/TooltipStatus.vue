@@ -1,5 +1,5 @@
 <template>
-  <div class="tooltip" v-if="showBtns">
+  <div class="tooltip">
     <tooltip-button
       class="button"
       icon="el-icon-close"
@@ -37,30 +37,25 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, watch } from "vue";
+import { computed, defineComponent, PropType, } from "vue";
 import TooltipButton from "@/components/TooltipButton.vue";
 import { useActor } from "@xstate/vue";
-import type { Interpreter, ActorRef } from "xstate";
-import type {
-  BookMachineContext,
-  BookMachineEvents,
-  DataMachineEvents,
-} from "@/machines/bookMachine";
+import { DataMachineEvents } from "@/machines/dataMachine";
+import type { ActorRef } from "xstate";
 
 export default defineComponent({
   props: {
-    bookService: {
-      type: Object as PropType<
-        Interpreter<BookMachineContext, any, BookMachineEvents>
-      >,
+    buttonsRef: {
+      type: Object as PropType<ActorRef<DataMachineEvents>[]>,
       required: true,
+    },
+    bookState: {
+      type: Object as any,
+      require: true,
     },
   },
   setup(props) {
-    const { state: bookState } = useActor(props.bookService);
-    const buttonRefs = bookState.value.context
-      ?.buttons as ActorRef<DataMachineEvents>[];
-    const buttons = buttonRefs.map((ref) => useActor(ref));
+    const buttons = props.buttonsRef.map((ref) => useActor(ref));
 
     const [createState, removeState, finishState, unfinishState] = buttons.map(
       (btn) => ({
@@ -71,31 +66,30 @@ export default defineComponent({
     );
 
     // event function
-    // const finish = () => finishBtn.send({ type: "CLICK" });
     const [create, remove, finish, unfinish] = buttons.map(
       (btn) => () => btn.send({ type: "CLICK" })
     );
 
     // when to show
+    // const showBtns = computed(() => props.bookState.matches("success"));
     const showAddBtn = computed(() =>
-      ["success.unread"].some(bookState.value.matches)
+      props.bookState.matches("success.unread")
     );
     const showRemoveBtn = computed(() =>
-      ["success.read"].some(bookState.value.matches)
+      props.bookState.matches("success.read")
     );
     const showFinBtn = computed(() =>
-      ["success.read.duration.unfinish"].some(bookState.value.matches)
+      props.bookState.matches("success.read.duration.unfinish")
     );
     const showUnfinBtn = computed(() =>
-      ["success.read.duration.finish"].some(bookState.value.matches)
+      props.bookState.matches("success.read.duration.finish")
     );
-    const showBtns = computed(() => bookState.value.matches("success"));
     return {
       showAddBtn,
       showRemoveBtn,
       showFinBtn,
       showUnfinBtn,
-      showBtns,
+      // showBtns,
       createState,
       create,
       removeState,

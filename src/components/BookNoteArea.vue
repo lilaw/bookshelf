@@ -37,7 +37,7 @@ export default defineComponent({
     const noteValue = ref(props.listItem.notes);
     const { state: noteState, send: sendNote } = useActor(props.noteRef);
 
-    type DebounceMutate = (payload: { type: string; notes: string }) => void;
+    type DebounceMutate = (payload: { type: "CLICK"; notes: string }) => void;
     const debounceMutate: DebounceMutate = debounceFn(
       (notes) => sendNote(notes),
       { wait: 3000 }

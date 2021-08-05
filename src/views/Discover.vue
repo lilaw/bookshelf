@@ -48,15 +48,8 @@ export default defineComponent({
     const booksRef = computed(() => searchState.value.context.booksRef)
     watch(query, (query) => {
       sendSearch({ type: "UPDATE-QUERY", query });
-      console.log({searchState, booksRef});
     });
 
-    watch(booksRef, (query) => {
-      console.log({searchState, booksRef});
-    });
-    watch(booksRef, (query) => {
-      console.log({searchState, booksRef}, 11111111111);
-    });
     function searchBooks() {
       sendSearch({ type: "SEARCH" });
     }

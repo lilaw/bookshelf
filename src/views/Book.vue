@@ -17,12 +17,12 @@
           <span>{{ book.publisher }}</span>
         </div>
         <div class="book__button">
-          <TooltipStatus :bookService="bookService" />
+          <TooltipStatus :buttonsRef="buttons" :bookState="bookState" />
         </div>
-        <div class="book__rate" v-if="listItem">
-          <BookRate :starRef="star" :listItem="listItem"/>
+        <div class="book__rate" v-if="isRead">
+          <BookRate :starRef="star" :listItem="listItem" />
         </div>
-        <div class="book__date" v-if="listItem">
+        <div class="book__date" v-if="isRead">
           <i class="el-icon-date"></i>
           <span>{{ formatDate(listItem.startDate) }}</span>
           <!-- eslint-disable-next-line  -->
@@ -36,7 +36,7 @@
       </div>
     </section>
 
-    <section class="book-container--tail" v-if="listItem">
+    <section class="book-container--tail" v-if="isRead">
       <label for="book__note" class="book__label">Notes:</label>
       <BookNoteArea :noteRef="note" :listItem="listItem" />
     </section>
@@ -52,13 +52,10 @@ import { computed, defineComponent, watch } from "vue";
 import { useRoute } from "vue-router";
 import TooltipStatus from "@/components/TooltipStatus.vue";
 import BookRate from "@/components/BookRate.vue";
-import { useBook } from "@/utils/book";
-import { useListItem } from "@/utils/listItems";
 import BookNoteArea from "@/components/BookNoteArea.vue";
 import { ErrorMessage } from "@/components/lib";
 import { useActor, useMachine } from "@xstate/vue";
 import { bookMachine } from "@/machines/bookMachine";
-import { json } from "msw/lib/types/context";
 
 export default defineComponent({
   setup() {
@@ -69,14 +66,18 @@ export default defineComponent({
       bookMachine({ bookId: bookId.value })
     );
     const isLoading = computed(() => bookState.value.matches("loadBook"));
+    const isError = computed(() => bookState.value.matches("loadBook.failure"));
+    const error = computed(() => bookState.value.context.message);
     const listItem = computed(() => bookState.value.context?.listItem);
+    const isRead = computed(() => bookState.value.matches("success.read"));
     const note = computed(() => bookState.value.context?.note);
     const star = computed(() => bookState.value.context?.star);
     const buttons = computed(() => bookState.value.context?.buttons);
     const book = computed(() => bookState.value.context?.book);
 
     watch(bookState, (b) => {
-      console.log(JSON.stringify(b.value, ,2), bookState);
+      console.log(b.toStrings().join(' '), bookState);
+      debugger
     });
 
     function formatDate(isostring: number): string {
@@ -85,15 +86,17 @@ export default defineComponent({
         year: "2-digit",
       }).format(new Date(isostring));
     }
-
+    
     return {
+      bookState,
       book,
       bookService,
       isLoading,
       listItem,
       formatDate,
-      // isError,
-      // error,
+      isError,
+      error,
+      isRead,
       note,
       star,
       buttons,

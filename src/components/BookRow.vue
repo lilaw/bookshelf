@@ -1,5 +1,5 @@
 <template>
-  <section class="book" data-testid="book-row">
+  <section class="book" data-testid="book-row" v-if="!isLoading">
     <router-link :to="`/books/${book.id}`" class="book__link">
       <div class="book__wrapper">
         <img
@@ -14,34 +14,37 @@
         </div>
       </div>
     </router-link>
-    <TooltipStatus :bookService="bookRef" />
+    <TooltipStatus :buttonsRef="buttons" :bookState="bookState" />
   </section>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from "vue";
+import { computed, defineComponent, PropType, watch } from "vue";
 import TooltipStatus from "@/components/TooltipStatus.vue";
 import { useActor } from "@xstate/vue";
-import type { Interpreter} from "xstate";
+import type { Interpreter } from "xstate";
 import type {
   BookMachineContext,
   BookMachineEvents,
+  BookMachineState,
 } from "@/machines/bookMachine";
 
 export default defineComponent({
   props: {
     bookRef: {
       type: Object as PropType<
-        Interpreter<BookMachineContext, any, BookMachineEvents>
+        Interpreter<BookMachineContext, any, BookMachineEvents, BookMachineState>
       >,
       required: true,
     },
   },
   setup(props) {
-    const { state: bookState, } = useActor(props.bookRef);
+    const { state: bookState } = useActor(props.bookRef);
     const book = computed(() => bookState.value.context?.book);
+    const buttons = computed(() => bookState.value.context?.buttons);
+    const isLoading = computed(() => bookState.value.matches("loadBook"));
 
-    return { book };
+    return { book, bookState, buttons, isLoading };
   },
   components: {
     TooltipStatus,

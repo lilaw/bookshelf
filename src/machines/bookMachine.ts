@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any */
 import {
   createMachine,
   assign,
@@ -6,7 +7,7 @@ import {
   ActorRef,
   StateMachine,
 } from "xstate";
-import type { HttpError, book } from "@/types";
+import type { book, item } from "@/types";
 import {
   performListItem,
   performCreateListItem,
@@ -17,12 +18,12 @@ import { performBook } from "@/utils/book";
 import { dataMachine, DataMachineEvents } from "./dataMachine";
 
 export type BookMachineEvents =
-  | { type: "ADD" }
+  | { data: item; type: "ADD" }
   | { type: "REMOVE" }
-  | { type: "FINISH" }
-  | { type: "UNFINISH" }
-  | { type: "RATE" }
-  | { type: "WRITE" };
+  | { data: item; type: "FINISH" }
+  | { data: item; type: "UNFINISH" }
+  | { data: item; type: "RATE" }
+  | { data: item; type: "WRITE" };
 
 export interface BookMachineContext {
   message?: string;
@@ -33,10 +34,35 @@ export interface BookMachineContext {
   note?: ActorRef<DataMachineEvents>;
 }
 
-export type BookMachineState = {
-  value: any;
-  context: BookMachineContext;
-};
+export type BookMachineState =
+  | {
+      value: "loadBook";
+      context: BookMachineContext;
+    }
+  | {
+      value: "loadBook.book";
+      context: BookMachineContext;
+    }
+  | {
+      value: "loadBook.listItem";
+      context: BookMachineContext;
+    }
+  | {
+      value: "loadBook.failure";
+      context: BookMachineContext;
+    }
+  | {
+      value: "success.pending";
+      context: BookMachineContext;
+    }
+  | {
+      value: "success.unread";
+      context: BookMachineContext;
+    }
+  | {
+      value: "success.read";
+      context: BookMachineContext;
+    };
 
 export function bookMachine({
   book,
@@ -165,9 +191,10 @@ export function bookMachine({
         isRead(context) {
           return context.listItem !== undefined;
         },
-        isFinish(context, event) {
+        isFinish(context) {
           return (
             context.listItem !== undefined &&
+            // @ts-expect-error: no problem
             typeof context.listItem.finishDate === "number"
           );
         },
@@ -188,6 +215,7 @@ export function bookMachine({
                 services: {
                   performRequest(ctx, event) {
                     return perfermUdateListItem({
+                      // @ts-expect-error: no problem
                       id: context.listItem.id,
                       notes: event.notes,
                     });
@@ -248,6 +276,7 @@ export function bookMachine({
                 dataMachine.withConfig({
                   services: {
                     performRequest(ctx, event) {
+                      // @ts-expect-error: no problem
                       return performRemoveListItem(context.listItem.id);
                     },
                   },
@@ -264,6 +293,7 @@ export function bookMachine({
                     performRequest(ctx, event) {
                       console.log("finish");
                       return perfermUdateListItem({
+                        // @ts-expect-error: no problem
                         id: context.listItem.id,
                         finishDate: null,
                       });
@@ -285,6 +315,7 @@ export function bookMachine({
                     performRequest(ctx, event) {
                       console.log("finish");
                       return perfermUdateListItem({
+                        // @ts-expect-error: no problem
                         id: context.listItem.id,
                         finishDate: Date.now(),
                       });
