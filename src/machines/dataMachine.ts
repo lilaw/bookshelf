@@ -1,26 +1,40 @@
-import {
-  createMachine,
-  assign,
-  sendParent,
-  spawn,
-  ActorRef,
-  Actor,
-  Interpreter,
-} from "xstate";
+import { createMachine, assign } from "xstate";
 
-export type DataMachineEvents = { type: "CLICK" } & Record<string, any>;
+export type DataMachineEvents = { type: "CLICK"; data?: any};
 
 export interface DataMachineContext {
   message?: string;
-  listItem?: undefined;
+  result: any[];
 }
 
-export const dataMachine = createMachine<DataMachineContext, DataMachineEvents>(
+export type DataMachineState =
+  | {
+      value: "idle";
+      context: DataMachineContext;
+    }
+  | {
+      value: "loading";
+      context: DataMachineContext;
+    }
+  | {
+      value: "failure";
+      context: DataMachineContext;
+    }
+  | {
+      value: "success";
+      context: DataMachineContext;
+    };
+
+export const dataMachine = createMachine<
+  DataMachineContext,
+  DataMachineEvents,
+  DataMachineState
+>(
   {
-    id: "buttonMachine",
+    id: "dataMachine",
     context: {
       message: undefined,
-      listItem: undefined,
+      result: [],
     },
     initial: "idle",
     states: {
@@ -30,7 +44,7 @@ export const dataMachine = createMachine<DataMachineContext, DataMachineEvents>(
       loading: {
         invoke: {
           src: "performRequest",
-          onDone: { target: "success", actions: "doneAction" },
+          onDone: { target: "success", actions: "onDone" },
           onError: { target: "failure", actions: "onError" },
         },
       },

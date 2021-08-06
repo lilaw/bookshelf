@@ -75,18 +75,13 @@ export default defineComponent({
     const buttons = computed(() => bookState.value.context?.buttons);
     const book = computed(() => bookState.value.context?.book);
 
-    watch(bookState, (b) => {
-      console.log(b.toStrings().join(' '), bookState);
-      debugger
-    });
-
     function formatDate(isostring: number): string {
       return Intl.DateTimeFormat(undefined, {
         month: "short",
         year: "2-digit",
       }).format(new Date(isostring));
     }
-    
+
     return {
       bookState,
       book,

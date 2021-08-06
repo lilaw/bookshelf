@@ -1,15 +1,15 @@
 <template>
-  <div v-if="listItems">
-    <p v-if="listItems.length === 0">
+  <div v-if="bookRefs">
+    <p v-if="bookRefs.length === 0">
       <slot name="welcome" />
     </p>
-    <p v-else-if="filtteredListItems.length !== 0">
+    <p v-else-if="filtteredBookRefs.length !== 0">
       <slot name="explore" />
     </p>
 
     <ul class="books">
-      <li v-for="item in filtteredListItems" :key="item.id">
-        <book-row :book="item.book" />
+      <li v-for="bookRef in filtteredBookRefs" :key="bookRef.id">
+        <BookRow :bookRef="bookRef" />
       </li>
     </ul>
   </div>
@@ -17,10 +17,11 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from "vue";
-import { useListItems } from "@/utils/listItems";
+import { computed, defineComponent, PropType, watch } from "vue";
 import type { item } from "@/types";
 import BookRow from "@/components/BookRow.vue";
+import { listMachine } from "@/machines/listMachine";
+import { useMachine } from "@xstate/vue";
 
 export default defineComponent({
   props: {
@@ -30,12 +31,27 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const listItems = useListItems();
-    const filtteredListItems = computed(() =>
-      listItems.value?.filter(props.filter)
+    const { state: listState, send: sendList } = useMachine(listMachine);
+    sendList({ type: "CLICK" });
+    const isLoading = computed(() =>
+      ["loading", "idle"].some(listState.value.matches)
+    );
+    const bookRefs = computed(() =>
+      isLoading.value ? [] : listState.value.context.result
     );
 
-    return { filtteredListItems, listItems };
+    const filtteredBookRefs = computed(() =>
+      isLoading.value
+        ? []
+        : bookRefs.value.filter((ref) =>
+            props.filter(ref.state.context.listItem)
+          )
+    );
+    watch(listState, () => {
+      debugger;
+    });
+
+    return { filtteredBookRefs, bookRefs, isLoading };
   },
   components: {
     BookRow,

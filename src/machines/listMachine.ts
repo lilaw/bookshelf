@@ -1,0 +1,22 @@
+import { dataMachine } from "./dataMachine";
+import { assign, spawn } from "xstate";
+import { performListItems } from "@/utils/listItems";
+import { bookMachine } from "./bookMachine";
+import type { item } from "@/types";
+
+export const listMachine = dataMachine.withConfig({
+  services: {
+    performRequest() {
+      return performListItems();
+    },
+  },
+  actions: {
+    onDone: assign({
+      result: (ctx, event: any) => {
+        return event.data.map((item: item) =>
+          spawn(bookMachine({ book: item.book, item }))
+        );
+      },
+    }),
+  },
+});

@@ -1,15 +1,9 @@
-import {
-  createMachine,
-  assign,
-  spawn,
-  ActorRef,
-} from "xstate";
-import type { HttpError, book } from "@/types";
+import { createMachine, assign, spawn, ActorRef } from "xstate";
+import type { book } from "@/types";
 import bookPlaceholderSvg from "@/assets/book-placeholder.svg";
-import { queryClient } from "@/context/QueryClient";
 import { bookSearch } from "@/utils/book";
 import { bookMachine } from "./bookMachine";
-import type {BookMachineContext, BookMachineEvents} from "./bookMachine"
+import type { BookMachineContext, BookMachineEvents } from "./bookMachine";
 
 export type SearchMachineEvents =
   | { type: "SEARCH" }
@@ -138,7 +132,7 @@ export const searchMachine = createMachine<
         },
         booksRef: (context, event: any) => {
           const booksRef = event.data.map((book: book) =>
-            spawn(bookMachine({book, initial: "listItem"}), book.id)
+            spawn(bookMachine({ book }), book.id)
           );
           return booksRef;
         },

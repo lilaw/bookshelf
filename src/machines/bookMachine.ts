@@ -28,7 +28,7 @@ export type BookMachineEvents =
 export interface BookMachineContext {
   message?: string;
   book?: book;
-  listItem?: undefined;
+  listItem?: item;
   buttons: ActorRef<DataMachineEvents>[];
   star?: ActorRef<DataMachineEvents>;
   note?: ActorRef<DataMachineEvents>;
@@ -66,30 +66,32 @@ export type BookMachineState =
 
 export function bookMachine({
   book,
-  initial = "book",
+  item,
   bookId,
 }: {
   book?: book;
-  initial?: string;
+  item?: item;
   bookId?: string;
 }): StateMachine<BookMachineContext, any, BookMachineEvents, BookMachineState> {
   const bookIdv = (bookId || book?.id) as string;
+  const initial = book && item ? "success" : "loadBook";
+  const loadBookInitial = book ? "listItem" : "book"
 
   return createMachine<BookMachineContext, BookMachineEvents, BookMachineState>(
     {
       id: "bookMachine",
-      initial: "loadBook",
+      initial: initial,
       context: {
         message: undefined,
         book: book,
-        listItem: undefined,
+        listItem: item,
         buttons: [],
         star: undefined,
         note: undefined,
       },
       states: {
         loadBook: {
-          initial: initial,
+          initial: loadBookInitial,
           states: {
             book: {
               invoke: {
@@ -116,7 +118,7 @@ export function bookMachine({
           initial: "pending",
           states: {
             pending: {
-              entry: ["buildButtons", "buildStar", "buildNote"],
+              entry: ["buildButtons", "buildStar", "buildNote", ],
               always: [
                 { target: "unread", cond: "isUnread" },
                 { target: "read", cond: "isRead" },
@@ -194,7 +196,6 @@ export function bookMachine({
         isFinish(context) {
           return (
             context.listItem !== undefined &&
-            // @ts-expect-error: no problem
             typeof context.listItem.finishDate === "number"
           );
         },
@@ -217,7 +218,7 @@ export function bookMachine({
                     return perfermUdateListItem({
                       // @ts-expect-error: no problem
                       id: context.listItem.id,
-                      notes: event.notes,
+                      notes: event.data.notes,
                     });
                   },
                 },
