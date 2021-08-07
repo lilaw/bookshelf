@@ -1,6 +1,6 @@
 import { logout } from "@/utils/auth-provider";
 import { isErrorInfoData } from "@/type-guards";
-import { useAuthActor } from "@/machines";
+import { useAuthActor } from "@/machines/authMachine";
 
 const apiURL = "https://bookshelf.jk/api";
 

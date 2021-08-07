@@ -1,6 +1,6 @@
 import { createMachine, assign } from "xstate";
 
-export type DataMachineEvents = { type: "CLICK"; data?: any};
+export type DataMachineEvents = { type: "CLICK"; data?: any };
 
 export interface DataMachineContext {
   message?: string;

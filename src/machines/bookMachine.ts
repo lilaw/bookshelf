@@ -75,7 +75,7 @@ export function bookMachine({
 }): StateMachine<BookMachineContext, any, BookMachineEvents, BookMachineState> {
   const bookIdv = (bookId || book?.id) as string;
   const initial = book && item ? "success" : "loadBook";
-  const loadBookInitial = book ? "listItem" : "book"
+  const loadBookInitial = book ? "listItem" : "book";
 
   return createMachine<BookMachineContext, BookMachineEvents, BookMachineState>(
     {
@@ -118,7 +118,7 @@ export function bookMachine({
           initial: "pending",
           states: {
             pending: {
-              entry: ["buildButtons", "buildStar", "buildNote", ],
+              entry: ["buildAddButtons", "buildStar", "buildNote"],
               always: [
                 { target: "unread", cond: "isUnread" },
                 { target: "read", cond: "isRead" },
@@ -129,6 +129,7 @@ export function bookMachine({
               on: { ADD: { target: "#read", actions: "setListItem" } },
             },
             read: {
+              entry: ["buildRemoveFinishUnfinishButtons"],
               id: "read",
               on: {
                 REMOVE: { target: "#unread", actions: "removeListItem" },
@@ -251,7 +252,7 @@ export function bookMachine({
               "star"
             ),
         }),
-        buildButtons: assign({
+        buildAddButtons: assign({
           buttons: (context) => {
             return [
               //add:
@@ -271,12 +272,20 @@ export function bookMachine({
                 }),
                 "addBtn"
               ),
+            ];
+          },
+        }),
+        buildRemoveFinishUnfinishButtons: assign({
+          buttons: (context) => {
+            return [
+              ...context.buttons,
 
               //remove:
               spawn(
                 dataMachine.withConfig({
                   services: {
                     performRequest(ctx, event) {
+                      debugger;
                       // @ts-expect-error: no problem
                       return performRemoveListItem(context.listItem.id);
                     },
@@ -287,6 +296,7 @@ export function bookMachine({
                 }),
                 "removeBtn"
               ),
+
               // finish:
               spawn(
                 dataMachine.withConfig({
@@ -309,6 +319,7 @@ export function bookMachine({
                 }),
                 "finishBtn"
               ),
+
               // unfinish
               spawn(
                 dataMachine.withConfig({

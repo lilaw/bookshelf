@@ -4,24 +4,24 @@
       class="button"
       icon="el-icon-close"
       label="Remove from list"
-      :state="removeState"
-      :clickHandler="remove"
+      :state="btn.btnState.removeState"
+      :clickHandler="btn.evtFun.remove"
       v-if="showRemoveBtn"
     />
     <tooltip-button
       class="button"
       icon="el-icon-circle-plus"
       label="Add to list"
-      :state="createState"
-      :clickHandler="create"
+      :state="btn.btnState.createState"
+      :clickHandler="btn.evtFun.create"
       v-if="showAddBtn"
     />
     <tooltip-button
       class="button"
       icon="el-icon-notebook-1"
       label="Mark as unfinish"
-      :state="unfinishState"
-      :clickHandler="unfinish"
+      :state="btn.btnState.unfinishState"
+      :clickHandler="btn.evtFun.unfinish"
       v-if="showUnfinBtn"
     >
     </tooltip-button>
@@ -29,15 +29,15 @@
       class="button"
       icon="el-icon-check"
       label="MarK as finish"
-      :state="finishState"
-      :clickHandler="finish"
+      :state="btn.btnState.finishState"
+      :clickHandler="btn.evtFun.finish"
       v-if="showFinBtn"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, } from "vue";
+import { computed, defineComponent, PropType } from "vue";
 import TooltipButton from "@/components/TooltipButton.vue";
 import { useActor } from "@xstate/vue";
 import { DataMachineEvents } from "@/machines/dataMachine";
@@ -55,20 +55,23 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const buttons = props.buttonsRef.map((ref) => useActor(ref));
+    const btn = computed(function btnState() {
+      const buttons = props.buttonsRef.map((ref) => useActor(ref));
+      const [createState, removeState, finishState, unfinishState] =
+        buttons.map((btn) => ({
+          isLoading: computed(() => btn.state.value.matches("loading")),
+          isError: computed(() => btn.state.value.matches("failure")),
+          error: computed(() => btn.state.value.context?.message),
+        }));
 
-    const [createState, removeState, finishState, unfinishState] = buttons.map(
-      (btn) => ({
-        isLoading: computed(() => btn.state.value.matches("loading")),
-        isError: computed(() => btn.state.value.matches("failure")),
-        error: computed(() => btn.state.value.context?.message),
-      })
-    );
-
-    // event function
-    const [create, remove, finish, unfinish] = buttons.map(
-      (btn) => () => btn.send({ type: "CLICK" })
-    );
+      const [create, remove, finish, unfinish] = buttons.map(
+        (btn) => () => btn.send({ type: "CLICK" })
+      );
+      return {
+        btnState: { createState, removeState, finishState, unfinishState },
+        evtFun: { create, remove, finish, unfinish },
+      };
+    });
 
     // when to show
     // const showBtns = computed(() => props.bookState.matches("success"));
@@ -89,15 +92,7 @@ export default defineComponent({
       showRemoveBtn,
       showFinBtn,
       showUnfinBtn,
-      // showBtns,
-      createState,
-      create,
-      removeState,
-      remove,
-      finish,
-      finishState,
-      unfinish,
-      unfinishState,
+      btn,
     };
   },
   components: {

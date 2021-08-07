@@ -16,7 +16,7 @@ export default defineComponent({
       open.value = false;
     }
 
-    return { open, openModal, closeModal, };
+    return { open, openModal, closeModal };
   },
 });
 </script>

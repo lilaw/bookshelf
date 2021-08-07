@@ -34,7 +34,7 @@
 import { computed, defineComponent, PropType, reactive, toRefs } from "vue";
 import type { user, form } from "@/types";
 import { ErrorMessage } from "@/components/lib";
-import { useAuthActor } from "@/machines";
+import { useAuthActor } from "@/machines/authMachine";
 
 export default defineComponent({
   props: {

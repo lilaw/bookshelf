@@ -1,61 +1,63 @@
 <template>
-  <main class="book" v-if="!isLoading">
-    <section class="book-container--head" v-if="!isError">
-      <div class="book__cover-container">
-        <img
-          :src="book.coverImageUrl"
-          :alt="`${book.title} cover image`"
-          class="book__cover-img"
-        />
-      </div>
-      <div class="book__info-warpper">
-        <h2 class="book__title">
-          {{ book.title }}
-        </h2>
-        <div class="book__maker">
-          <span class="book__author">{{ book.author }}</span> |
-          <span>{{ book.publisher }}</span>
+  <main class="book">
+    <div class="book-container" v-if="isSuccess">
+      <section class="book-container--head">
+        <div class="book__cover-container">
+          <img
+            :src="book.coverImageUrl"
+            :alt="`${book.title} cover image`"
+            class="book__cover-img"
+          />
         </div>
-        <div class="book__button">
-          <TooltipStatus :buttonsRef="buttons" :bookState="bookState" />
+        <div class="book__info-warpper">
+          <h2 class="book__title">
+            {{ book.title }}
+          </h2>
+          <div class="book__maker">
+            <span class="book__author">{{ book.author }}</span> |
+            <span>{{ book.publisher }}</span>
+          </div>
+          <div class="book__button">
+            <TooltipStatus :buttonsRef="buttons" :bookState="bookState" />
+          </div>
+          <div class="book__rate" v-if="isRead">
+            <BookRate :starRef="star" :listItem="listItem" />
+          </div>
+          <div class="book__date" v-if="isRead">
+            <i class="el-icon-date"></i>
+            <span>{{ formatDate(listItem.startDate) }}</span>
+            <!-- eslint-disable-next-line  -->
+            <span v-if="listItem.finishDate">
+              - &nbsp;{{ formatDate(listItem.finishDate) }}</span
+            >
+          </div>
+          <p class="book__synopsis" data-testid="book-synopsis">
+            {{ book.synopsis.slice(0, 500) }}...
+          </p>
         </div>
-        <div class="book__rate" v-if="isRead">
-          <BookRate :starRef="star" :listItem="listItem" />
-        </div>
-        <div class="book__date" v-if="isRead">
-          <i class="el-icon-date"></i>
-          <span>{{ formatDate(listItem.startDate) }}</span>
-          <!-- eslint-disable-next-line  -->
-          <span v-if="listItem.finishDate">
-            - &nbsp;{{ formatDate(listItem.finishDate) }}</span
-          >
-        </div>
-        <p class="book__synopsis" data-testid="book-synopsis">
-          {{ book.synopsis.slice(0, 500) }}...
-        </p>
-      </div>
-    </section>
-
-    <section class="book-container--tail" v-if="isRead">
-      <label for="book__note" class="book__label">Notes:</label>
-      <BookNoteArea :noteRef="note" :listItem="listItem" />
-    </section>
-
+      </section>
+      <section class="book-container--tail" v-if="isRead">
+        <label for="book__note" class="book__label">Notes:</label>
+        <BookNoteArea :noteRef="note" :listItem="listItem" />
+      </section>
+    </div>
     <section class="book-error" v-if="isError">
       <ErrorMessage :error="error" />
     </section>
+    <PageSpinner v-if="isLoading" />
   </main>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, watch } from "vue";
+import { computed, defineComponent } from "vue";
 import { useRoute } from "vue-router";
 import TooltipStatus from "@/components/TooltipStatus.vue";
 import BookRate from "@/components/BookRate.vue";
 import BookNoteArea from "@/components/BookNoteArea.vue";
 import { ErrorMessage } from "@/components/lib";
-import { useActor, useMachine } from "@xstate/vue";
+import { useMachine } from "@xstate/vue";
 import { bookMachine } from "@/machines/bookMachine";
+import { PageSpinner } from "@/components/lib";
 
 export default defineComponent({
   setup() {
@@ -65,8 +67,13 @@ export default defineComponent({
     const { state: bookState, service: bookService } = useMachine(
       bookMachine({ bookId: bookId.value })
     );
-    const isLoading = computed(() => bookState.value.matches("loadBook"));
+    const isLoading = computed(() =>
+      ["loadBook.book", "loadBook.listItem"].some((s) =>
+        bookState.value.matches(s)
+      )
+    );
     const isError = computed(() => bookState.value.matches("loadBook.failure"));
+    const isSuccess = computed(() => bookState.value.matches("success"));
     const error = computed(() => bookState.value.context.message);
     const listItem = computed(() => bookState.value.context?.listItem);
     const isRead = computed(() => bookState.value.matches("success.read"));
@@ -86,6 +93,7 @@ export default defineComponent({
       bookState,
       book,
       bookService,
+      isSuccess,
       isLoading,
       listItem,
       formatDate,
@@ -102,6 +110,7 @@ export default defineComponent({
     BookRate,
     BookNoteArea,
     ErrorMessage,
+    PageSpinner,
   },
 });
 </script>
@@ -120,6 +129,8 @@ export default defineComponent({
   margin-top: 3rem;
 }
 .book {
+  position: relative;
+  min-height: 25rem;
   &__cover-container {
     width: 12rem;
   }

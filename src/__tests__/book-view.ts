@@ -1,4 +1,4 @@
-import AppIndex from "../Index.vue";
+import App from "../App.vue";
 import { buildListItem, buildBook } from "../test/generate";
 import { waitFor, screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
@@ -29,7 +29,7 @@ async function renderBookView(book?: Book, user?: user) {
   if (typeof user === "undefined") {
     user = await loginAsUser();
   }
-  const result = await render(AppIndex, {
+  const result = await render(App, {
     path: `/books/${(book as Book).id}`,
   });
   await waitForLoadingToFinish();
@@ -68,8 +68,12 @@ test("can add book to  reading list", async () => {
 
   expect(screen.queryAllByRole("radio", { name: /star/i })).toBeTruthy();
 
-  expect(screen.queryByRole("button", { name: /mark as read/i })).toBeTruthy();
-  expect(screen.queryByRole("button", { name: /mark as unread/i })).toBeFalsy();
+  expect(
+    screen.queryByRole("button", { name: /mark as finish/i })
+  ).toBeTruthy();
+  expect(
+    screen.queryByRole("button", { name: /mark as unfinish/i })
+  ).toBeFalsy();
 
   expect(screen.getByText(formatDate(Date.now()))).toBeTruthy();
   expect(screen.getByRole("textbox", { name: /note/i })).toBeTruthy();
@@ -97,13 +101,15 @@ test("can mark list as read", async () => {
   await renderBookView(book, user);
 
   const removeFromListButton = screen.getByRole("button", {
-    name: /mark as read/i,
+    name: /mark as finish/i,
   });
   await userEvent.click(removeFromListButton);
   expect(removeFromListButton.getAttribute("disabled")).toEqual("");
   await waitForLoadingToFinish();
 
-  expect(screen.getByRole("button", { name: /mark as unread/i })).toBeTruthy();
+  expect(
+    screen.getByRole("button", { name: /mark as unfinish/i })
+  ).toBeTruthy();
 });
 
 test("can edit note", async () => {

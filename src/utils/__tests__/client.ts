@@ -1,8 +1,7 @@
 import { client } from "../client";
 import { server, rest } from "@/test/server";
 
-import * as authMock from "../auth-provider";
-jest.mock("../auth-provider");
+import * as authMock from "../auth-provider.ts";
 
 const apiURL = process.env.VUE_APP_BOOK_APP_API_URL;
 const endpoint = "test-endpoint";

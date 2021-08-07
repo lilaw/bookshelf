@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
 
 export default defineComponent({
   props: {
@@ -36,7 +36,6 @@ export default defineComponent({
     state: { type: Object, required: true },
   },
   setup(props) {
-
     return {
       isLoading: props.state.isLoading,
       isError: props.state.isError,

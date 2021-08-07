@@ -1,6 +1,7 @@
 <template>
-  <section class="book" data-testid="book-row" v-if="!isLoading">
-    <router-link :to="`/books/${book.id}`" class="book__link">
+  <section class="book" data-testid="book-row">
+    <PageSpinner v-if="isLoading" />
+    <router-link :to="`/books/${book.id}`" class="book__link" v-else>
       <div class="book__wrapper">
         <img
           :src="book.coverImageUrl"
@@ -19,8 +20,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, watch } from "vue";
+import { computed, defineComponent, PropType } from "vue";
 import TooltipStatus from "@/components/TooltipStatus.vue";
+import { PageSpinner } from "@/components/lib";
 import { useActor } from "@xstate/vue";
 import type { Interpreter } from "xstate";
 import type {
@@ -33,7 +35,12 @@ export default defineComponent({
   props: {
     bookRef: {
       type: Object as PropType<
-        Interpreter<BookMachineContext, any, BookMachineEvents, BookMachineState>
+        Interpreter<
+          BookMachineContext,
+          any,
+          BookMachineEvents,
+          BookMachineState
+        >
       >,
       required: true,
     },
@@ -48,12 +55,14 @@ export default defineComponent({
   },
   components: {
     TooltipStatus,
+    PageSpinner,
   },
 });
 </script>
 
 <style lang="scss" scoped>
 .book {
+  position: relative;
   margin-top: 1rem;
   width: 45rem;
   display: flex;

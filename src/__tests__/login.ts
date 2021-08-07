@@ -1,4 +1,4 @@
-import AppIndex from "../Index.vue";
+import App from "../App.vue";
 import { buildUser } from "../test/generate";
 import { loginAsUser } from "../test/app-test-utils";
 import {
@@ -186,10 +186,9 @@ async function renderLoginScreen() {
   router.push("/list");
   await router.isReady();
 
-  return render(AppIndex, {
+  return render(App, {
     global: {
       plugins: [router, store, ElementPlus],
     },
   });
 }
-

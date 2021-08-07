@@ -13,8 +13,24 @@ export const FullPageSpinner = () => {
     </div>
   );
 };
+export const PageSpinner = () => {
+  return (
+    <div class="el-loading-mask">
+      <div class="el-loading-spinner">
+        <svg class="circular" viewBox="25 25 50 50" aria-label="loading">
+          <circle class="path" cx="50" cy="50" r="20" fill="none"></circle>
+        </svg>
+      </div>
+    </div>
+  );
+};
 
-export function ErrorMessage({ error, ...props }: { error: HttpError | string}) {
+export function ErrorMessage({
+  error,
+  ...props
+}: {
+  error: HttpError | string;
+}) {
   const message = typeof error === "string" ? error : error.message;
   return (
     <div role="alert" style={[{ color: "ef5350" }]} {...props}>

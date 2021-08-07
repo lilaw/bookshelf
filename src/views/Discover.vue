@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onUnmounted, ref, watch , computed, } from "vue";
+import { defineComponent, onUnmounted, ref, watch, computed } from "vue";
 import BookRow from "@/components/BookRow.vue";
 import { refetchBookSearch } from "@/utils/book";
 import { useMachine } from "@xstate/vue";
@@ -41,11 +41,11 @@ export default defineComponent({
   setup() {
     const query = ref("");
     const { state: searchState, send: sendSearch } = useMachine(searchMachine);
-    const isFetching = computed(() => searchState.value.matches("searching"))
-    const isError = computed(() => searchState.value.matches("failure"))
-    const error = computed(() => searchState.value.context.message)
-    const books = computed(() => searchState.value.context.books)
-    const booksRef = computed(() => searchState.value.context.booksRef)
+    const isFetching = computed(() => searchState.value.matches("searching"));
+    const isError = computed(() => searchState.value.matches("failure"));
+    const error = computed(() => searchState.value.context.message);
+    const books = computed(() => searchState.value.context.books);
+    const booksRef = computed(() => searchState.value.context.booksRef);
     watch(query, (query) => {
       sendSearch({ type: "UPDATE-QUERY", query });
     });
@@ -64,7 +64,7 @@ export default defineComponent({
       error,
       status,
       searchBooks,
-      booksRef
+      booksRef,
     };
   },
   components: {

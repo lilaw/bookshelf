@@ -1,4 +1,4 @@
-import { createMachine, assign, interpret, State } from "xstate";
+import { createMachine, assign, interpret, State, Interpreter } from "xstate";
 import {
   login as authLogin,
   logout as authLogout,
@@ -7,13 +7,14 @@ import {
 import { areYouABadBody, areYouABadStatus } from "@/utils/client";
 import type { user, form } from "@/types";
 import { isUserData } from "@/type-guards";
+import { useActor } from "@xstate/vue";
 
 export type AuthMachineEvents =
   | { type: "LOGIN"; form: form }
   | { type: "LOGOUT" }
   | { type: "SIGNUP"; form: form }
   | { type: "CLEAR" }
-  | { type: "RESET"};
+  | { type: "RESET" };
 
 export interface AuthMachineContext {
   user?: user;
@@ -107,7 +108,7 @@ export const authMachine = createMachine<
       CLEAR: {
         actions: "clearMessage",
       },
-      RESET: "unauthorized"
+      RESET: "unauthorized",
     },
   },
   {
@@ -152,23 +153,46 @@ export const authMachine = createMachine<
   }
 );
 
-const stateDefinition =
-  // @ts-expect-error: localStorage may return null, but || handle it
-  JSON.parse(localStorage.getItem("authState")) || authMachine.initialState;
+export function createAuthService() {
+  const stateDefinition =
+    // @ts-expect-error: localStorage may return null, but || handle it
+    JSON.parse(window.localStorage.getItem("authState")) ||
+    authMachine.initialState;
+  const previousState = State.create(stateDefinition);
 
-const previousState = State.create(stateDefinition);
+  // @ts-expect-error: skip error
+  const resolvedState = authMachine.resolveState(previousState);
 
-// @ts-expect-error: skip error
-const resolvedState = authMachine.resolveState(previousState);
+  const authService = interpret(authMachine, { devTools: true })
+    .onTransition((state) => {
+      if (state.changed) {
+        if (process.env.NODE_ENV !== "test") console.log(state);
+        localStorage.setItem("authState", JSON.stringify(state));
+      }
+    })
+    .start(resolvedState);
+  return authService;
+}
 
-export const authService = interpret(authMachine, { devTools: true })
-  .onTransition((state) => {
-    if (state.changed) {
-      if (process.env.NODE_ENV !== "test") console.log(state);
-      localStorage.setItem("authState", JSON.stringify(state));
-    }
-  })
-  .start(resolvedState);
+let authService: Interpreter<
+  AuthMachineContext,
+  any,
+  AuthMachineEvents,
+  AuthMachineState
+>;
+export function setupAuthService(): void {
+  authService = createAuthService();
+}
+
+export function useAuthActor() {
+  if (!authService) throw new Error(`call setupAuthService() first.`);
+  const { state: authState, send: sendAuth } = useActor(authService);
+  return { authState, sendAuth };
+}
+
+export function resetAuth(): void {
+  authService.send("RESET");
+}
 
 //----------------------------
 // helper
@@ -186,8 +210,4 @@ function formatData(data: { status: number; message: string }): {
     response: { ok: true, status: data.status } as Response,
     json: data,
   };
-}
-
-export function resetAuth(): void {
-  authService.send("RESET")
 }

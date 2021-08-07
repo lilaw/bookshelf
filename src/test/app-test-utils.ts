@@ -10,14 +10,22 @@ import {
 } from "@testing-library/vue";
 import type { RouteLocationRaw } from "vue-router";
 import type { RenderResult } from "@testing-library/vue/types";
-import * as auth from "../utils/auth-provider";
-type component = typeof AppIndex;
+type component = typeof App;
+import { authMachine } from "../machines/authMachine";
 
 export async function loginAsUser() {
   const user = buildUser();
   await usersDB.create(user);
   const authUser = await usersDB.authenticate(user);
-  window.localStorage.setItem(auth.localStorageKey, authUser.token);
+  const authSate = {
+    value: "authorized",
+    context: {
+      message: undefined,
+      user: { id: user.id, username: user.username, token: authUser.token },
+    },
+  };
+  const stateDefinition = { ...authMachine.initialState, ...authSate };
+  window.localStorage.setItem("authState", JSON.stringify(stateDefinition));
   return { ...user, ...authUser };
 }
 

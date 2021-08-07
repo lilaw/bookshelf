@@ -6,7 +6,7 @@
     <error-message :error="error" />
   </div>
   <div v-else-if="isSuccess"> -->
-    <slot> </slot>
+  <slot> </slot>
   <!-- </div> -->
   <!-- <div v-else>
     There is a Unhandled state in AuthContext.vue. state is {{ status }},

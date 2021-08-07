@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, watch } from "vue";
+import { computed, defineComponent, PropType } from "vue";
 import type { item } from "@/types";
 import BookRow from "@/components/BookRow.vue";
 import { listMachine } from "@/machines/listMachine";
@@ -47,9 +47,6 @@ export default defineComponent({
             props.filter(ref.state.context.listItem)
           )
     );
-    watch(listState, () => {
-      debugger;
-    });
 
     return { filtteredBookRefs, bookRefs, isLoading };
   },

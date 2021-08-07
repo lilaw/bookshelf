@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { useAuthActor } from "@/machines";
+import { useAuthActor } from "@/machines/authMachine";
 
 export default defineComponent({
   setup() {

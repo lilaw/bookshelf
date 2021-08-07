@@ -6,13 +6,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watch, computed } from "vue";
+import { defineComponent, computed } from "vue";
 import AuthenticatedApp from "./Authenticated-app.vue";
 import UnauthenticatedApp from "./Unauthenticated-app.vue";
-import { useAuthActor } from "@/machines";
+import { useAuthActor, setupAuthService } from "@/machines/authMachine";
 
 export default defineComponent({
   setup() {
+    setupAuthService();
     const { authState } = useAuthActor();
     const isLoggedIn = computed<boolean>(() =>
       authState.value.matches("authorized")

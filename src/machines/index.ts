@@ -1,7 +1,10 @@
 import { useActor } from "@xstate/vue";
-import { authService } from "@/machines/authMachine";
+import { createAuthService } from "@/machines/authMachine";
 
+let authService;
 export function useAuthActor() {
+  authService = authService || createAuthService();
+
   const { state: authState, send: sendAuth } = useActor(authService);
   return { authState, sendAuth };
 }

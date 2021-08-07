@@ -3,7 +3,7 @@ import {
   loginAsUser,
   render,
 } from "../test/app-test-utils";
-import AppIndex from "../Index.vue";
+import App from "../App.vue";
 import { server, rest } from "../test/server";
 import { buildBook } from "../test/generate";
 import { screen } from "@testing-library/vue";
@@ -14,8 +14,8 @@ const apiURL = process.env.VUE_APP_BOOK_APP_API_URL;
 
 async function renderDiscover() {
   const user = await loginAsUser();
-  const result = await render(AppIndex, { path: `/discover` });
-  // await waitForLoadingToFinish();
+  const result = await render(App, { path: `/discover` });
+  await waitForLoadingToFinish();
 
   return { user, ...result };
 }
