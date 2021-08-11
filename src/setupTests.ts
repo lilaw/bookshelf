@@ -4,6 +4,7 @@ import * as usersDB from "./test/data/users";
 import * as booksDB from "./test/data/books";
 import * as listItemsDB from "./test/data/list-items";
 import { waitFor } from "@testing-library/vue";
+import '@testing-library/jest-dom'
 import { setupAuthService } from "./machines/authMachine";
 
 beforeAll(() => server.listen());

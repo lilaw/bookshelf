@@ -25,6 +25,7 @@ export type BookMachineEvents =
   | { data: item; type: "RATE" }
   | { data: item; type: "WRITE" };
 
+
 export interface BookMachineContext {
   message?: string;
   book?: book;
@@ -64,6 +65,7 @@ export type BookMachineState =
       context: BookMachineContext;
     };
 
+export type BookMachineStateValue = BookMachineState["value"]
 export function bookMachine({
   book,
   item,
@@ -134,7 +136,7 @@ export function bookMachine({
               on: {
                 REMOVE: { target: "#unread", actions: "removeListItem" },
               },
-              parallel: true,
+              type: "parallel",
               states: {
                 duration: {
                   id: "duration",

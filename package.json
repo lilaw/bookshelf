@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.14.5",
+    "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/user-event": "^13.1.9",
     "@testing-library/vue": "^6.4.2",
     "@types/faker": "^5.5.7",

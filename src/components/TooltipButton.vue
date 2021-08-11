@@ -10,7 +10,7 @@
       <el-button
         class="button"
         native-type="button"
-        :aria-label="isError ? error : label"
+        :aria-label="isError ? `${label} ${error}` : label"
         size="mini"
         circle
         @click.prevent.stop="clickHandler"
