@@ -1,5 +1,6 @@
 # bookshelf
 rebuild the bookshelf app using vue3 and typescript
+Built with Vue3, XState, element-UI, vue-query and TypeScript
 
 ## [demo](https://github.com/lilaw/bookshelf)
 
