@@ -1,5 +1,5 @@
 import { server } from "./test/server";
-import { queryClient } from "./context/QueryClient";
+import { queryClient } from "./utils/QueryClient";
 import * as usersDB from "./test/data/users";
 import * as booksDB from "./test/data/books";
 import * as listItemsDB from "./test/data/list-items";

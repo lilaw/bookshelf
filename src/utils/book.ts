@@ -3,7 +3,7 @@ import { useClient } from "@/utils/client";
 import { isBookData, isBooksData } from "@/type-guards";
 import { areYouABadBody } from "@/utils/client";
 import type { HttpError, book } from "@/types";
-import { queryClient } from "@/context/QueryClient";
+import { queryClient } from "@/utils/QueryClient";
 
 export function performBook(bookId: string) {
   const client = useClient();

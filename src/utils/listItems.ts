@@ -3,7 +3,7 @@ import { useClient } from "@/utils/client";
 import type { item, HttpError } from "@/types";
 import { isListItemsData, isItemData } from "@/type-guards";
 import { areYouABadBody } from "@/utils/client";
-import { queryClient } from "@/context/QueryClient";
+import { queryClient } from "@/utils/QueryClient";
 
 type updateItemPayload = {
   id: string;
