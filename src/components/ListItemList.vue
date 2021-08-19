@@ -34,7 +34,7 @@ export default defineComponent({
     const { state: listState, send: sendList } = useMachine(listMachine);
     sendList({ type: "CLICK" });
     const isLoading = computed(() =>
-      ["loading", "idle"].some(listState.value.matches)
+      (["loading", "idle"] as ["loading", "idle"]).some(listState.value.matches)
     );
     const bookRefs = computed(() =>
       isLoading.value ? [] : listState.value.context.result

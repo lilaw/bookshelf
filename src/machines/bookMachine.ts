@@ -53,17 +53,9 @@ export type BookMachineState =
       context: BookMachineContext;
     }
   | {
-      value: "success.pending";
+      value: "success" | "success.pending" | "success.unread" | "success.read",
       context: BookMachineContext;
     }
-  | {
-      value: "success.unread";
-      context: BookMachineContext;
-    }
-  | {
-      value: "success.read";
-      context: BookMachineContext;
-    };
 
 export type BookMachineStateValue = BookMachineState["value"]
 export function bookMachine({
