@@ -13,7 +13,32 @@
       </li>
     </ul>
   </div>
-  <div v-else>loading your finished books</div>
+  <el-skeleton style="margin-left: 40px" v-if="isLoading">
+    <template #template>
+      <div
+        class="book__wrapper"
+        style="display: flex; gap: 1rem; width: 650px; margin-bottom: 3rem"
+      >
+        <el-skeleton-item
+          variant="image"
+          class="book__cover"
+          style="height: 210px; width: 200px"
+        />
+        <el-skeleton :rows="5" animated />
+      </div>
+      <div
+        class="book__wrapper"
+        style="display: flex; gap: 1rem; width: 650px; margin-bottom: 1rem"
+      >
+        <el-skeleton-item
+          variant="image"
+          class="book__cover"
+          style="height: 210px; width: 200px"
+        />
+        <el-skeleton :rows="5" animated />
+      </div>
+    </template>
+  </el-skeleton>
 </template>
 
 <script lang="ts">

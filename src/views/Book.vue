@@ -44,7 +44,22 @@
     <section class="book-error" v-if="isError">
       <ErrorMessage :error="error" />
     </section>
-    <PageSpinner v-if="isLoading" />
+    <el-skeleton class="book-container" v-if="isLoading">
+      <template #template>
+        <section class="book-container--head">
+          <div class="book__cover-container">
+            <el-skeleton-item
+              variant="image"
+              class="book__cover-img"
+              style="height: 214px"
+            />
+          </div>
+          <div class="book__info-warpper">
+            <el-skeleton :rows="5" animated />
+          </div>
+        </section>
+      </template>
+    </el-skeleton>
   </main>
 </template>
 
@@ -137,6 +152,7 @@ export default defineComponent({
   }
   &__cover-img {
     width: 100%;
+    aspect-ratio: 71 / 107;
   }
   &__info-warpper {
     display: grid;

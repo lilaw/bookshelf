@@ -1,6 +1,17 @@
 <template>
   <section class="book" data-testid="book-row">
-    <PageSpinner v-if="isLoading" />
+    <el-skeleton v-if="isLoading">
+      <template #template>
+        <div class="book__wrapper">
+          <el-skeleton-item
+            variant="image"
+            class="book__cover"
+            style="height: 210px"
+          />
+          <el-skeleton :rows="5" animated />
+        </div>
+      </template>
+    </el-skeleton>
     <router-link :to="`/books/${book.id}`" class="book__link" v-else>
       <div class="book__wrapper">
         <img
@@ -22,7 +33,6 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue";
 import TooltipStatus from "@/components/TooltipStatus.vue";
-import { PageSpinner } from "@/components/lib";
 import { useActor } from "@xstate/vue";
 import type { Interpreter } from "xstate";
 import type {
@@ -55,7 +65,6 @@ export default defineComponent({
   },
   components: {
     TooltipStatus,
-    PageSpinner,
   },
 });
 </script>
