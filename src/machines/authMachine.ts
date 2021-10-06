@@ -1,4 +1,5 @@
 import { createMachine, assign, interpret, State, Interpreter } from "xstate";
+import { createModel } from "xstate/lib/model";
 import {
   login as authLogin,
   logout as authLogout,
@@ -9,49 +10,30 @@ import type { user, form } from "@/types";
 import { isUserData } from "@/type-guards";
 import { useActor } from "@xstate/vue";
 
-export type AuthMachineEvents =
-  | { type: "LOGIN"; form: form }
-  | { type: "LOGOUT" }
-  | { type: "SIGNUP"; form: form }
-  | { type: "CLEAR" }
-  | { type: "RESET" };
 
-export interface AuthMachineContext {
-  user?: user;
-  message?: string;
-}
-
-export type AuthMachineState =
-  | {
-      value: "unauthorized";
-      context: AuthMachineContext & { user: undefined; message: undefined };
-    }
-  | { value: "signup"; context: AuthMachineContext & { user: undefined } }
-  | {
-      value: "loading";
-      context: AuthMachineContext & { user: undefined; message: undefined };
-    }
-  | {
-      value: "logout";
-      context: AuthMachineContext & { user: undefined; message: undefined };
-    }
-  | {
-      value: "authorized";
-      context: AuthMachineContext & { user: user; message: undefined };
-    };
-
-export const authMachine = createMachine<
-  AuthMachineContext,
-  AuthMachineEvents,
-  AuthMachineState
->(
+const authModel = createModel(
+  {
+    user: undefined as user | undefined,
+    message: undefined as string | undefined,
+  },
+  {
+    events: {
+      LOGIN: (form: form) => ({ form }),
+      LOGOUT: () => ({}),
+      SIGNUP: (form: form) => ({ form }),
+      CLEAR: () => ({}),
+      RESET: () => ({}),
+      updateUser: (data: user) => ({ data }),
+      updateMessage: (message: string) => ({ message }),
+      clearMessage: () => ({}),
+    },
+  }
+);
+export const authMachine = authModel.createMachine(
   {
     id: "authentication",
     initial: "unauthorized",
-    context: {
-      user: undefined,
-      message: undefined,
-    },
+    context: authModel.initialContext,
     states: {
       unauthorized: {
         on: {
@@ -135,17 +117,17 @@ export const authMachine = createMachine<
     },
     actions: {
       setUserProfile: assign({
-        user(context, event: any) {
+        user: (context, event: any) => {
           return event.data;
         },
       }),
-      onError: assign({
+      onError: authModel.assign({
         message: (context, event: any) => {
           return event.data.message;
         },
       }),
-      clearMessage: assign({
-        message: (context) => {
+      clearMessage: authModel.assign({
+        message: () => {
           return undefined;
         },
       }),
@@ -153,14 +135,13 @@ export const authMachine = createMachine<
   }
 );
 
-export function createAuthService() {
-  const stateDefinition =
+function createAuthService() {
+  const stateDefinition: typeof authMachine.initialState =
     // @ts-expect-error: localStorage may return null, but || handle it
     JSON.parse(window.localStorage.getItem("authState")) ||
     authMachine.initialState;
   const previousState = State.create(stateDefinition);
 
-  // @ts-expect-error: skip error
   const resolvedState = authMachine.resolveState(previousState);
 
   const authService = interpret(authMachine, { devTools: true })
@@ -174,12 +155,7 @@ export function createAuthService() {
   return authService;
 }
 
-let authService: Interpreter<
-  AuthMachineContext,
-  any,
-  AuthMachineEvents,
-  AuthMachineState
->;
+let authService: ReturnType<typeof createAuthService>;
 export function setupAuthService(): void {
   authService = createAuthService();
 }
