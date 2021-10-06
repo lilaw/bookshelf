@@ -1,6 +1,6 @@
 <template>
   <section class="book" data-testid="book-row">
-    <el-skeleton v-if="isLoading">
+    <el-skeleton v-if="isLoading" aria-label="loading">
       <template #template>
         <div class="book__wrapper">
           <el-skeleton-item

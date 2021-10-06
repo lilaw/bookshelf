@@ -13,7 +13,7 @@
       </li>
     </ul>
   </div>
-  <el-skeleton style="margin-left: 40px" v-if="isLoading">
+  <el-skeleton style="margin-left: 40px" v-if="isLoading" aria-label="loading">
     <template #template>
       <div
         class="book__wrapper"

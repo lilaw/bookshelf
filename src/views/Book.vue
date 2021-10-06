@@ -44,7 +44,7 @@
     <section class="book-error" v-if="isError">
       <ErrorMessage :error="error" />
     </section>
-    <el-skeleton class="book-container" v-if="isLoading">
+    <el-skeleton class="book-container" v-if="isLoading" aria-label="loading">
       <template #template>
         <section class="book-container--head">
           <div class="book__cover-container">
