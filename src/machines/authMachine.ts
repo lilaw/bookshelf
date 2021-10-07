@@ -1,4 +1,5 @@
-import { createMachine, assign, interpret, State, Interpreter } from "xstate";
+/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any */
+import { assign, interpret, State } from "xstate";
 import { createModel } from "xstate/lib/model";
 import {
   login as authLogin,
@@ -9,7 +10,6 @@ import { areYouABadBody, areYouABadStatus } from "@/utils/client";
 import type { user, form } from "@/types";
 import { isUserData } from "@/type-guards";
 import { useActor } from "@xstate/vue";
-
 
 const authModel = createModel(
   {
@@ -29,6 +29,7 @@ const authModel = createModel(
     },
   }
 );
+
 export const authMachine = authModel.createMachine(
   {
     id: "authentication",
@@ -121,13 +122,13 @@ export const authMachine = authModel.createMachine(
           return event.data;
         },
       }),
-      onError: authModel.assign({
+      onError: assign({
         message: (context, event: any) => {
           return event.data.message;
         },
       }),
-      clearMessage: authModel.assign({
-        message: () => {
+      clearMessage: assign({
+        message: (context) => {
           return undefined;
         },
       }),
@@ -160,7 +161,16 @@ export function setupAuthService(): void {
   authService = createAuthService();
 }
 
-export function useAuthActor() {
+const wrapperAuthActor = () => useActor(authService);
+type map = {
+  authState: "state";
+  sendAuth: "send";
+};
+type changeKey<T, M extends Record<string, string>> = {
+  [K in keyof M]: T[M[K] & keyof T];
+};
+type authActor = changeKey<ReturnType<typeof wrapperAuthActor>, map>;
+export function useAuthActor(): authActor {
   if (!authService) throw new Error(`call setupAuthService() first.`);
   const { state: authState, send: sendAuth } = useActor(authService);
   return { authState, sendAuth };
