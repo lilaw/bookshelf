@@ -19,13 +19,12 @@ import type { item } from "@/types";
 import debounceFn from "debounce-fn";
 import { ErrorMessage } from "@/components/lib";
 import { useActor } from "@xstate/vue";
-import type { DataMachineEvents } from "@/machines/dataMachine";
-import type { ActorRef } from "xstate";
+import type { DataMachineActor } from "@/machines/dataMachine";
 
 export default defineComponent({
   props: {
     noteRef: {
-      type: Object as PropType<ActorRef<DataMachineEvents>>,
+      type: Object as PropType<DataMachineActor>,
       required: true,
     },
     listItem: {

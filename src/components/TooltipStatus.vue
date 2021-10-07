@@ -40,13 +40,12 @@
 import { computed, defineComponent, PropType } from "vue";
 import TooltipButton from "@/components/TooltipButton.vue";
 import { useActor } from "@xstate/vue";
-import { DataMachineEvents } from "@/machines/dataMachine";
-import type { ActorRef } from "xstate";
+import { DataMachineActor } from "@/machines/dataMachine";
 
 export default defineComponent({
   props: {
     buttonsRef: {
-      type: Object as PropType<ActorRef<DataMachineEvents>[]>,
+      type: Object as PropType<DataMachineActor[]>,
       required: true,
     },
     bookState: {

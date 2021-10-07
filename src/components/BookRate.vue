@@ -29,14 +29,13 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue";
 import { useActor } from "@xstate/vue";
-import { DataMachineEvents } from "@/machines/dataMachine";
-import type { ActorRef } from "xstate";
+import { DataMachineActor } from "@/machines/dataMachine";
 import type { item } from "@/types";
 
 export default defineComponent({
   props: {
     starRef: {
-      type: Object as PropType<ActorRef<DataMachineEvents>>,
+      type: Object as PropType<DataMachineActor>,
       required: true,
     },
     listItem: {
