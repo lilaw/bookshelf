@@ -6,7 +6,6 @@ import {
   ContextFrom,
   EventFrom,
   Interpreter,
-  ActorRefWithDeprecatedState,
   StateMachine,
 } from "xstate";
 import { createModel } from "xstate/lib/model";
@@ -18,12 +17,7 @@ import {
   perfermUdateListItem,
 } from "@/utils/listItems";
 import { performBook } from "@/utils/book";
-import {
-  dataMachine,
-  DataMachineEvents,
-  DataMachineContext,
-  DataMachineState,
-} from "./dataMachine";
+import { DataMachineActor, dataMachine } from "./dataMachine";
 
 export type BookMachineState =
   | {
@@ -47,20 +41,14 @@ export type BookMachineState =
       context: BookMachineContext;
     };
 
-type dataMachineActor = ActorRefWithDeprecatedState<
-  DataMachineContext,
-  DataMachineEvents,
-  DataMachineState
->;
-
 const bookModel = createModel(
   {
     message: undefined,
     book: undefined as undefined | book,
     listItem: undefined as undefined | item,
-    buttons: [] as dataMachineActor[],
-    star: undefined as undefined | dataMachineActor,
-    note: undefined as undefined | dataMachineActor,
+    buttons: [] as DataMachineActor[],
+    star: undefined as undefined | DataMachineActor,
+    note: undefined as undefined | DataMachineActor,
   },
   {
     events: {
@@ -320,7 +308,6 @@ export function bookMachine({
                 dataMachine.withConfig({
                   services: {
                     performRequest(ctx, event) {
-                      console.log("finish");
                       return perfermUdateListItem({
                         // @ts-expect-error: no problem
                         id: context.listItem.id,

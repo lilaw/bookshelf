@@ -1,9 +1,9 @@
-import { createMachine, assign, spawn, ActorRef } from "xstate";
+/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any */
+import { createMachine, assign, spawn } from "xstate";
 import type { book } from "@/types";
-import bookPlaceholderSvg from "@/assets/book-placeholder.svg";
 import { bookSearch } from "@/utils/book";
 import { bookMachine } from "./bookMachine";
-import type { BookMachineContext, BookMachineEvents } from "./bookMachine";
+import type { BookMachineActor } from "@/machines/bookMachine";
 
 export type SearchMachineEvents =
   | { type: "SEARCH" }
@@ -15,7 +15,7 @@ export interface SearchMachineContext {
   message?: string;
   books?: book[];
   query: string;
-  booksRef: ActorRef<BookMachineEvents, BookMachineContext>[];
+  booksRef: BookMachineActor[];
 }
 
 export type SearchMachineState =
@@ -51,7 +51,6 @@ export const searchMachine = createMachine<
     initial: "searching",
     states: {
       idle: {
-        entry: ["setDefaultBooks"],
         on: {
           SEARCH: "searching",
         },
@@ -106,26 +105,6 @@ export const searchMachine = createMachine<
       },
     },
     actions: {
-      setDefaultBooks: assign({
-        books: (context) => {
-          const loadingBook = {
-            title: "Loading...",
-            author: "loading...",
-            coverImageUrl: bookPlaceholderSvg,
-            publisher: "Loading Publishing",
-            synopsis: "Loading...",
-            id: "loading...",
-            pageCount: -1,
-          };
-          const loadingBooks = Array.from({ length: 7 }).map(function makeBook(
-            v,
-            i
-          ) {
-            return { ...loadingBook, id: `loadingbook-${i}` };
-          });
-          return loadingBooks;
-        },
-      }),
       setBooks: assign({
         books: (context, event: any) => {
           return event.data;

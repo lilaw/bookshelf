@@ -1,13 +1,13 @@
-import { createMachine, assign } from "xstate";
+/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any */
+import { createMachine, assign, ActorRefWithDeprecatedState } from "xstate";
 
 export type DataMachineEvents = { type: "CLICK"; data?: any };
-
 export interface DataMachineContext {
   message?: string;
   result: any[];
 }
 
-export type DataMachineState =
+type DataMachineState =
   | {
       value: "idle";
       context: DataMachineContext;
@@ -25,6 +25,12 @@ export type DataMachineState =
       context: DataMachineContext;
     };
 
+
+export type DataMachineActor = ActorRefWithDeprecatedState<
+  DataMachineContext,
+  DataMachineEvents,
+  DataMachineState
+>;
 export const dataMachine = createMachine<
   DataMachineContext,
   DataMachineEvents,
@@ -65,6 +71,10 @@ export const dataMachine = createMachine<
           return event.data.message;
         },
       }),
+      // xstate complain about no those functon, those functions are overwritten by function in wichConfig
+      onDone: assign({}),
+      clearError: assign({}),
+      sendParent: assign({}),
     },
   }
 );
