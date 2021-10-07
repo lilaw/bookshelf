@@ -72,8 +72,6 @@ import BookNoteArea from "@/components/BookNoteArea.vue";
 import { ErrorMessage } from "@/components/lib";
 import { useMachine } from "@xstate/vue";
 import { bookMachine } from "@/machines/bookMachine";
-import type { BookMachineStateValue } from "@/machines/bookMachine";
-import { PageSpinner } from "@/components/lib";
 
 export default defineComponent({
   setup() {
@@ -85,7 +83,7 @@ export default defineComponent({
     );
     const isLoading = computed(() =>
       ["loadBook.book", "loadBook.listItem"].some((s) =>
-        bookState.value.matches(s as BookMachineStateValue)
+        bookState.value.matches(s)
       )
     );
     const isError = computed(() => bookState.value.matches("loadBook.failure"));
@@ -126,7 +124,6 @@ export default defineComponent({
     BookRate,
     BookNoteArea,
     ErrorMessage,
-    PageSpinner,
   },
 });
 </script>

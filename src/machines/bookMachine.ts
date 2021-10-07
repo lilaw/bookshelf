@@ -1,12 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any */
 import {
-  createMachine,
   assign,
   sendParent,
   spawn,
-  ActorRef,
+  ContextFrom,
+  EventFrom,
+  Interpreter,
+  ActorRefWithDeprecatedState,
   StateMachine,
 } from "xstate";
+import { createModel } from "xstate/lib/model";
 import type { book, item } from "@/types";
 import {
   performListItem,
@@ -15,25 +18,12 @@ import {
   perfermUdateListItem,
 } from "@/utils/listItems";
 import { performBook } from "@/utils/book";
-import { dataMachine, DataMachineEvents } from "./dataMachine";
-
-export type BookMachineEvents =
-  | { data: item; type: "ADD" }
-  | { type: "REMOVE" }
-  | { data: item; type: "FINISH" }
-  | { data: item; type: "UNFINISH" }
-  | { data: item; type: "RATE" }
-  | { data: item; type: "WRITE" };
-
-
-export interface BookMachineContext {
-  message?: string;
-  book?: book;
-  listItem?: item;
-  buttons: ActorRef<DataMachineEvents>[];
-  star?: ActorRef<DataMachineEvents>;
-  note?: ActorRef<DataMachineEvents>;
-}
+import {
+  dataMachine,
+  DataMachineEvents,
+  DataMachineContext,
+  DataMachineState,
+} from "./dataMachine";
 
 export type BookMachineState =
   | {
@@ -53,11 +43,45 @@ export type BookMachineState =
       context: BookMachineContext;
     }
   | {
-      value: "success" | "success.pending" | "success.unread" | "success.read",
+      value: "success" | "success.pending" | "success.unread" | "success.read";
       context: BookMachineContext;
-    }
+    };
 
-export type BookMachineStateValue = BookMachineState["value"]
+type dataMachineActor = ActorRefWithDeprecatedState<
+  DataMachineContext,
+  DataMachineEvents,
+  DataMachineState
+>;
+
+const bookModel = createModel(
+  {
+    message: undefined,
+    book: undefined as undefined | book,
+    listItem: undefined as undefined | item,
+    buttons: [] as dataMachineActor[],
+    star: undefined as undefined | dataMachineActor,
+    note: undefined as undefined | dataMachineActor,
+  },
+  {
+    events: {
+      ADD: (data: item) => ({ data }),
+      REMOVE: () => ({}),
+      FINISH: (data: item) => ({ data }),
+      UNFINISH: (data: item) => ({ data }),
+      RATE: (data: item) => ({ data }),
+      WRITE: (data: item) => ({ data }),
+    },
+  }
+);
+type BookMachineContext = ContextFrom<typeof bookModel>;
+type BookMachineEvents = EventFrom<typeof bookModel>;
+export type BookMachineActor = Interpreter<
+  BookMachineContext,
+  any,
+  BookMachineEvents,
+  BookMachineState
+>;
+
 export function bookMachine({
   book,
   item,
@@ -71,7 +95,7 @@ export function bookMachine({
   const initial = book && item ? "success" : "loadBook";
   const loadBookInitial = book ? "listItem" : "book";
 
-  return createMachine<BookMachineContext, BookMachineEvents, BookMachineState>(
+  return bookModel.createMachine(
     {
       id: "bookMachine",
       initial: initial,

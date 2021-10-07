@@ -34,24 +34,12 @@
 import { computed, defineComponent, PropType } from "vue";
 import TooltipStatus from "@/components/TooltipStatus.vue";
 import { useActor } from "@xstate/vue";
-import type { Interpreter } from "xstate";
-import type {
-  BookMachineContext,
-  BookMachineEvents,
-  BookMachineState,
-} from "@/machines/bookMachine";
+import type { BookMachineActor } from "@/machines/bookMachine";
 
 export default defineComponent({
   props: {
     bookRef: {
-      type: Object as PropType<
-        Interpreter<
-          BookMachineContext,
-          any,
-          BookMachineEvents,
-          BookMachineState
-        >
-      >,
+      type: Object as PropType<BookMachineActor>,
       required: true,
     },
   },
