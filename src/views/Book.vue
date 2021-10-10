@@ -162,8 +162,6 @@ export default defineComponent({
     font-size: 2rem;
     grid-row: 1 / 2;
   }
-  &__author {
-  }
   &__button {
     grid-row: 1 / 3;
     grid-column: 2 / 3;
@@ -184,8 +182,6 @@ export default defineComponent({
   }
 
   /* tail */
-  &__label {
-  }
 }
 .book-error {
   display: grid;

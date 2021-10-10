@@ -79,8 +79,6 @@ export default defineComponent({
     display: grid;
     grid-template-columns: 4fr 2fr;
   }
-  &__title {
-  }
   &__author {
     align-self: center;
   }
