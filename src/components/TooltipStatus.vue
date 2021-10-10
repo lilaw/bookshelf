@@ -41,6 +41,7 @@ import { computed, defineComponent, PropType } from "vue";
 import TooltipButton from "@/components/TooltipButton.vue";
 import { useActor } from "@xstate/vue";
 import { DataMachineActor } from "@/machines/dataMachine";
+import { BookState } from "@/machines/bookMachine";
 
 export default defineComponent({
   props: {
@@ -49,8 +50,8 @@ export default defineComponent({
       required: true,
     },
     bookState: {
-      type: Object as any,
-      require: true,
+      type: Object as PropType<BookState>,
+      required: true,
     },
   },
   setup(props) {

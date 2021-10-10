@@ -25,7 +25,6 @@ type DataMachineState =
       context: DataMachineContext;
     };
 
-
 export type DataMachineActor = ActorRefWithDeprecatedState<
   DataMachineContext,
   DataMachineEvents,

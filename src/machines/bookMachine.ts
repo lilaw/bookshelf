@@ -37,7 +37,13 @@ export type BookMachineState =
       context: BookMachineContext;
     }
   | {
-      value: "success" | "success.pending" | "success.unread" | "success.read";
+      value:
+        | "success"
+        | "success.pending"
+        | "success.unread"
+        | "success.read"
+        | "success.read.duration.unfinish"
+        | "success.read.duration.finish";
       context: BookMachineContext;
     };
 
@@ -69,6 +75,7 @@ export type BookMachineActor = Interpreter<
   BookMachineEvents,
   BookMachineState
 >;
+export type BookState = BookMachineActor["state"];
 
 export function bookMachine({
   book,

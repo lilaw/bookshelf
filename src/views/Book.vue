@@ -83,7 +83,7 @@ export default defineComponent({
     );
     const isLoading = computed(() =>
       ["loadBook.book", "loadBook.listItem"].some((s) =>
-        bookState.value.matches(s)
+        bookState.value.matches(s as "loadBook.book" | "loadBook.listItem")
       )
     );
     const isError = computed(() => bookState.value.matches("loadBook.failure"));

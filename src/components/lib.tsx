@@ -1,5 +1,5 @@
 import type { HttpError } from "@/types";
-export const FullPageSpinner = () => {
+export const FullPageSpinner: () => JSX.Element = () => {
   return (
     <div
       class="el-loading-mask is-fullscreen"
@@ -13,7 +13,7 @@ export const FullPageSpinner = () => {
     </div>
   );
 };
-export const PageSpinner = () => {
+export const PageSpinner: () => JSX.Element = () => {
   return (
     <div class="el-loading-mask">
       <div class="el-loading-spinner">
@@ -30,7 +30,7 @@ export function ErrorMessage({
   ...props
 }: {
   error: HttpError | string;
-}) {
+}): JSX.Element {
   const message = typeof error === "string" ? error : error.message;
   return (
     <div role="alert" style={[{ color: "ef5350" }]} {...props}>

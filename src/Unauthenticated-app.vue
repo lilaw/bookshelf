@@ -36,6 +36,7 @@ import { defineComponent } from "vue";
 import LoginForm from "@/components/LoginForm.vue";
 import AppModal from "@/components/AppModal.vue";
 import { useAuthActor } from "@/machines/authMachine";
+import type { form } from "@/types";
 
 export default defineComponent({
   name: "Home",
@@ -44,10 +45,10 @@ export default defineComponent({
     function clearMessage() {
       sendAuth("CLEAR");
     }
-    function login(form: any) {
+    function login(form: form) {
       sendAuth({ type: "LOGIN", form });
     }
-    function register(form: any) {
+    function register(form: form) {
       sendAuth({ type: "SIGNUP", form });
     }
 

@@ -85,7 +85,11 @@ function areYouABadBody<T>(check: (x: any) => x is T) {
   };
 }
 
-function useClient() {
+type useClient = (
+  endpoint: string,
+  config?: config | undefined
+) => Promise<unknown>;
+function useClient(): useClient {
   const { authState } = useAuthActor();
   const token = authState.value.context.user?.token;
   return function withUserClient(endpoint: string, config?: config) {

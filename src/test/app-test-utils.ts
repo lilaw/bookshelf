@@ -10,7 +10,6 @@ import {
 } from "@testing-library/vue";
 import type { RouteLocationRaw } from "vue-router";
 import type { RenderResult } from "@testing-library/vue/types";
-type component = typeof App;
 import { authMachine } from "../machines/authMachine";
 
 export async function loginAsUser() {
@@ -37,7 +36,8 @@ export async function waitForLoadingToFinish(): Promise<void> {
 }
 
 export async function render(
-  component: component,
+  // eslint-disable-next-line
+  component: any,
   { path }: { path: RouteLocationRaw }
 ): Promise<RenderResult> {
   router.push(path);

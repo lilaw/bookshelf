@@ -256,7 +256,6 @@ describe("book can add, remove, finish, unfinish", () => {
   });
 });
 
-
 ////////////////////
 async function buildReadingBook() {
   const user = await loginAsUser();
@@ -283,7 +282,6 @@ async function renderBookView(book?: Book, user?: user) {
     book: book as Book,
   };
 }
-
 
 xtest("can edit note", async () => {
   jest.useFakeTimers();
