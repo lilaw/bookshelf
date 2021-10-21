@@ -5,7 +5,7 @@ Built with Vue3, XState, element-UI, vue-query, jest, testing-library and TypeSc
 ## [demo](https://bookshelf.pages.dev)
 
 ## Get Started
-
+1. `git clone https://github.com/lilaw/bookshelf.git`
 1. `cd bookshelf`
 1. `yarn install`
 1. `yarn serve`
