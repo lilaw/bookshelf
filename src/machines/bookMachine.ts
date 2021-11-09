@@ -318,7 +318,7 @@ export function bookMachine({
                       return perfermUdateListItem({
                         // @ts-expect-error: no problem
                         id: context.listItem.id,
-                        finishDate: null,
+                        finishDate: Date.now(),
                       });
                     },
                   },
@@ -341,7 +341,7 @@ export function bookMachine({
                       return perfermUdateListItem({
                         // @ts-expect-error: no problem
                         id: context.listItem.id,
-                        finishDate: Date.now(),
+                        finishDate: null,
                       });
                     },
                   },

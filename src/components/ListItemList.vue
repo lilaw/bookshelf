@@ -1,6 +1,6 @@
 <template>
-  <div v-if="bookRefs">
-    <p v-if="bookRefs.length === 0">
+  <div v-if="!isLoading">
+    <p v-if="filtteredBookRefs.length === 0">
       <slot name="welcome" />
     </p>
     <p v-else-if="filtteredBookRefs.length !== 0">
@@ -9,6 +9,7 @@
 
     <ul class="books">
       <li v-for="bookRef in filtteredBookRefs" :key="bookRef.id">
+        <pre></pre>
         <BookRow :bookRef="bookRef" />
       </li>
     </ul>
@@ -61,16 +62,10 @@ export default defineComponent({
     const isLoading = computed(() =>
       (["loading", "idle"] as ["loading", "idle"]).some(listState.value.matches)
     );
-    const bookRefs = computed(() =>
-      isLoading.value ? [] : listState.value.context.result
-    );
+    const bookRefs = computed(() => listState.value.context.result);
 
     const filtteredBookRefs = computed(() =>
-      isLoading.value
-        ? []
-        : bookRefs.value.filter((ref) =>
-            props.filter(ref.state.context.listItem)
-          )
+      bookRefs.value.filter((ref) => props.filter(ref.state.context.listItem))
     );
 
     return { filtteredBookRefs, bookRefs, isLoading };
