@@ -5,6 +5,8 @@ Built with Vue3, XState, element-UI, vue-query, jest, testing-library and TypeSc
 书籍管理应用，支持书籍添加、删除，评分、记笔记、搜索、阅读进度管理、用户注册、登录和退出 
 使用Vue作为视图层，Xstate处理逻辑，vue-query对API CRUD操作并缓存结果；Xstate做基于模型的测试有83%代码覆盖率，用TypeScript语言编写
 
+[小程序版](https://github.com/lilaw/bookshelf-min-program)
+
 ## [demo](https://bookshelf.pages.dev)
 
 ## Get Started
